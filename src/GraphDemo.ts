@@ -46,7 +46,7 @@ export class GraphDemo
     {
         this.vertices.forEach((element) => 
         {
-            if (vertex.isAdjacent(element))
+            if (element.isAdjacent(vertex))
                 return element;
         })
 
@@ -65,12 +65,13 @@ export class GraphDemo
         console.log(this.stack.length);
 
 
-        while(this.stack.length > 0)
+        while(!this.isStackEmpty())
         {
             var a = this.peek();
-            
+            // console.log("something: ", a);
             var univisitedVertex = this.getAdjUnivisitedVertex(a);
-            console.log("something: ", univisitedVertex?.label);
+
+            console.log("nothing: ", univisitedVertex?.label);
             if (univisitedVertex == undefined) 
             {
                 this.pop();
@@ -90,6 +91,6 @@ export class GraphDemo
     }
     
     displayVertex(v: Vertex) {
-        console.log("displaying vertex: ", v);
+        console.log("displaying vertex: ", v.label);
     }
 }

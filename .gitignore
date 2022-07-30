@@ -1,0 +1,14 @@
+/[Bb]in/
+/node_modules/
+/[Ll]og/
+/[Ll]ogs/
+
+*.lock
+*.env
+*-keypair.json
+
+# Visual Studio cache directory
+.vs/
+mrSlave
+mrSlave.pub
+.vscode/settings.json

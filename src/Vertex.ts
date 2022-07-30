@@ -17,9 +17,12 @@ export class Vertex
     public isAdjacent(v : Vertex) : boolean
     {
         this.connectedEdges.forEach((element) => {
-            console.log("this element is connected to: ", element.start.label, " and: ", element.end.label)
+            // console.log("this element is connected to: ", element.start.label, " and: ", element.end.label)
             if (element.start == v || element.end == v)
+            {
+                console.log("should be returning true; element: ", element.start.label,"->", element.end.label, "v: ", v.label);
                 return true;
+            }
         });
 
         return false;
