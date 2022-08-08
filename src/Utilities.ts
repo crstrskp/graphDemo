@@ -2,7 +2,11 @@ import { Vertex } from "./Vertex";
 
 export class Utilities
 {
-    public static getAllAdjacentVertices(v : Vertex) 
+    static jestTest() {
+        return 42;
+    }
+    
+    static getAllAdjacentVertices(v : Vertex) 
     {
         var inbound = Utilities.getAllVerticesLeadingTo(v);
         var outbound = Utilities.getAllVerticesLeadingFrom(v);
@@ -46,4 +50,9 @@ export class Utilities
         return result;
     }
 
+}
+
+export function jestTest2()
+{
+    return 42;
 }
