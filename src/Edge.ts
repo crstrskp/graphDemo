@@ -13,17 +13,13 @@ export class Edge
         this.start = start; 
         this.end = end; 
 
-        this.cost = this.getCost();
+        this.cost = -1;
     }
 
     getCost(): number {
-        return 1;
+        return this.cost;
     }
 
-    /**
-     * this is a debug method, as all costs should be set from pricemaps and fees.
-     * @param cost weight of the edge
-     */
     setCost(cost : number)  
     {
         this.cost = cost;
