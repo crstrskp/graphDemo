@@ -7,17 +7,17 @@ export interface IGraph
      * return an array of all the vertices of the graph.
      * @Input: None; @Output: array of vertices
      */
-    getVertices() : Array<Vertex>; 
+    getAllVertices() : Array<Vertex>; 
 
     /**
      * Return an array of all the edges of the graph.
      * @Input: None; @Output: array of edges
      */
-    getEdges() : Array<Edge>;
+    getAllEdges() : Array<Edge>;
 
     
     /**
-     * Return an array of the edges incident upon vertex v.
+     * Return an array of the edges incident upon vertex v. 
      * @param v incident edges upon this given vertex
      * @Output: array of edges incident upon vertex v. 
      */
@@ -36,7 +36,7 @@ export interface IGraph
      * Return an array storing the end vertices of edge {e}.
      * @param e Edge that connects the vertices returned. 
      */
-    getEndVertices(e : Edge) : Array<Vertex>; 
+    getVertices(e : Edge) : Array<Vertex>; 
 
 
     /**
@@ -55,6 +55,7 @@ export interface IGraph
 
     /**
      * Insert and return a new undirected edge with end vertices v and w storing element o 
+     * NOTE: As of writing, this will create a directedEdge as this is the only thing this framework currently supports. 
      * @param v Vertex 1
      * @param w Vertex 2
      * @param o the object that will be used as the element for the edge. 
@@ -67,7 +68,7 @@ export interface IGraph
      * @param end End Vertex
      * @param o the object that will be used as the element for the edge. 
      */
-    insertDirectedEdge(start : Vertex, end : Vertex, o : any) : Edge; 
+    // insertDirectedEdge(start : Vertex, end : Vertex, o : any) : Edge; 
 
     /**
      * Remove vertex v and all its incident edges.
