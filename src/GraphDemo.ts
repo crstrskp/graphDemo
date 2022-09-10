@@ -12,7 +12,7 @@ import { Vertex } from "./Vertex";
 // ------------------------------ THIS CLASS IS DISCONTINUED -------------------------------------- // 
 // ------------------------------ THIS CLASS IS DISCONTINUED -------------------------------------- // 
 // ------------------------------ THIS CLASS IS DISCONTINUED -------------------------------------- // 
-export class GraphDemo
+/*export class GraphDemo
 {
     vertices = new Array<Vertex>();
     edges = new Array<Edge>();
@@ -104,4 +104,4 @@ export class GraphDemo
     displayVertex(v: Vertex) {
         console.log("displaying vertex: ", v.label);
     }
-}
+}*/
