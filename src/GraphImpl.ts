@@ -32,15 +32,17 @@ export class GraphImpl implements IGraph
     getAllEdges(): Edge[] 
     { 
         var edges : Edge[] = [];
-        this.edges.forEach((e) => {
-            if (e != null && e != undefined) 
+        for (var i = 0; i < this.edges.length; i++)
+        {   
+            var e = this.edges[i];
+            if (e != null && e != undefined)
             {
                 edges.push(e);
             }
-        });
+        }
 
-        this.edges = edges;
-        return this.edges; 
+        this.edges = edges; 
+        return this.edges;
     }
     
     getIncidentEdges(v: Vertex): Edge[]
@@ -52,7 +54,7 @@ export class GraphImpl implements IGraph
                 if (incidentEdges.includes(edge) == false) 
                     incidentEdges.push(edge);
         });
-
+        // console.log("incident edges for vertex {",v, "}:\n",incidentEdges);
         return incidentEdges;
     }
 
@@ -125,6 +127,14 @@ export class GraphImpl implements IGraph
             if (this.vertices[i].label != v.label)
             {
                 verts.push(this.vertices[i]);
+            }
+            else 
+            {
+                var vEdges = this.getIncidentEdges(v);
+                vEdges.forEach((e) => 
+                {
+                    this.removeEdge(e);
+                });
             }
         }
         this.vertices = verts.reverse(); 

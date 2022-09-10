@@ -55,64 +55,64 @@ describe('GraphImpl_testSuite', () =>
         expect(allEdges.length).toEqual(5);
     });
 
-    // test('graph_getIncidentEdges', () => {
-    //     var graph = new GraphImpl();
+    test('graph_getIncidentEdges', () => {
+        var graph = new GraphImpl();
 
-    //     var v1 = graph.insertVertex("v1");
-    //     var v2 = graph.insertVertex("v2");
-    //     var v3 = graph.insertVertex("v3");
+        var v1 = graph.insertVertex("v1");
+        var v2 = graph.insertVertex("v2");
+        var v3 = graph.insertVertex("v3");
 
-    //     var e1_2 = graph.insertEdge(v1, v2, "e1_2");
-    //     var e1_3 = graph.insertEdge(v1, v2, "e1_3");
-    //     var e2_1 = graph.insertEdge(v1, v2, "e2_1");
-    //     var e2_3 = graph.insertEdge(v1, v2, "e2_3");
-    //     var e3_1 = graph.insertEdge(v1, v2, "e3_1");
-    //     var e3_2 = graph.insertEdge(v1, v2, "e3_2");
+        var e1_2 = graph.insertEdge(v1, v2, "e1_2");
+        var e1_3 = graph.insertEdge(v1, v3, "e1_3");
+        var e2_1 = graph.insertEdge(v2, v1, "e2_1");
+        var e2_3 = graph.insertEdge(v2, v3, "e2_3");
+        var e3_1 = graph.insertEdge(v3, v1, "e3_1");
+        var e3_2 = graph.insertEdge(v3, v2, "e3_2");
 
+        expect(graph.getAllEdges().length).toBe(6);
+
+        var isIncident = false; 
+        var v1Edges = graph.getIncidentEdges(v1);
+        var v2Edges = graph.getIncidentEdges(v2);
+        var v3Edges = graph.getIncidentEdges(v3);
         
-    //     var isIncident = false; 
-    //     var v1Edges = graph.getIncidentEdges(v1);
-    //     var v2Edges = graph.getIncidentEdges(v2);
-    //     var v3Edges = graph.getIncidentEdges(v3);
-        
+        expect(v1Edges.length).toEqual(4);
+        expect(v2Edges.length).toEqual(4);
+        expect(v3Edges.length).toEqual(4);
 
-    //     expect(v1Edges.length).toEqual(4);
-    //     expect(v2Edges.length).toEqual(4);
-    //     expect(v3Edges.length).toEqual(4);
+        v1Edges.forEach((e : Edge) => {
+            if (e.end == v1 || e.start == v1)
+                isIncident = true;
 
-    //     v1Edges.forEach((e : Edge) => {
-    //         if (e.end == v1 || e.start == v1)
-    //             isIncident = true;
+            expect(isIncident).toEqual(true);
+            isIncident = false;
+        });
 
-    //         expect(isIncident).toEqual(true);
-    //         isIncident = false;
-    //     });
+        expect(e3_2.start == v1 || e3_2.end == v1).toEqual(false);
+        expect(e2_3.start == v1 || e2_3.end == v1).toEqual(false);
 
-    //     expect(e3_2.start == v1 || e3_2.end == v1).toEqual(false);
-    //     expect(e2_3.start == v1 || e2_3.end == v1).toEqual(false);
-
-    //     v2Edges.forEach((e : Edge) => {
-    //         if (e.end == v2 || e.start == v2)
-    //             isIncident = true;
+        v2Edges.forEach((e : Edge) => {
+            if (e.end == v2 || e.start == v2)
+                isIncident = true;
             
-    //         expect(isIncident).toEqual(true);
-    //         isIncident = false;
-    //     });
+            expect(isIncident).toEqual(true);
+            isIncident = false;
+        });
 
-    //     expect(e3_1.start == v2 || e3_1.end == v2).toEqual(false);
-    //     expect(e1_3.start == v2 || e1_3.end == v2).toEqual(false);
+        expect(e3_1.start == v2 || e3_1.end == v2).toEqual(false);
+        expect(e1_3.start == v2 || e1_3.end == v2).toEqual(false);
 
-    //     v3Edges.forEach((e : Edge) => {
-    //         if (e.end == v3 || e.start == v3)
-    //             isIncident = true;
+        v3Edges.forEach((e : Edge) => {
+            if (e.end == v3 || e.start == v3)
+                isIncident = true;
             
-    //         expect(isIncident).toEqual(true);
-    //         isIncident = false;
-    //     });
+            expect(isIncident).toEqual(true);
+            isIncident = false;
+        });
         
-    //     expect(e2_1.start == v3 || e2_1.end == v3).toEqual(false);
-    //     expect(e1_2.start == v3 || e1_2.end == v3).toEqual(false);
-    // });
+        expect(e2_1.start == v3 || e2_1.end == v3).toEqual(false);
+        expect(e1_2.start == v3 || e1_2.end == v3).toEqual(false);
+    });
 
     test('graph_getOpposite', () => {
         /**
@@ -251,52 +251,57 @@ describe('GraphImpl_testSuite', () =>
     });
 
     
-    // test('graph_removeIncidentEdgeWhenRemovingVertex', () => {
-    //     var graph = new GraphImpl(); 
+    test('graph_removeIncidentEdgeWhenRemovingVertex', () => {
+        var graph = new GraphImpl(); 
 
-    //     var v1 = graph.insertVertex("v1");
-    //     var v2 = graph.insertVertex("v2");
-    //     var e1_2 = graph.insertEdge(v1, v2, "e1_2");
+        var v1 = graph.insertVertex("v1");
+        var v2 = graph.insertVertex("v2");
+        var e1_2 = graph.insertEdge(v1, v2, "e1_2");
 
-    //     var allEdges = graph.getAllEdges();
-    //     expect(allEdges.length).toEqual(1);
+        var allEdges = graph.getAllEdges();
+        expect(allEdges.length).toEqual(1);
         
-    //     graph.removeVertex(v1);
-    //     allEdges = graph.getAllEdges();
-    //     expect(allEdges.length).toEqual(0);
-    // });
+        graph.removeVertex(v1);
+        allEdges = graph.getAllEdges();
+        expect(allEdges.length).toEqual(0);
+    });
 
-    // test('graph_removeIncidentEdgeWhenRemovingVertex2', () => {
-    //     var graph = new GraphImpl(); 
+    test('graph_removeIncidentEdgeWhenRemovingVertex2', () => {
+        var graph = new GraphImpl(); 
 
-    //     var v1 = graph.insertVertex("v1");
-    //     var v2 = graph.insertVertex("v2");
-    //     var v3 = graph.insertVertex("v2");
-    //     var v4 = graph.insertVertex("v2");
+        var v1 = graph.insertVertex("v1");
+        var v2 = graph.insertVertex("v2");
+        var v3 = graph.insertVertex("v2");
+        var v4 = graph.insertVertex("v2");
         
-    //     var e1_2 = graph.insertEdge(v1, v2, "e1_2");
-    //     var e2_1 = graph.insertEdge(v2, v1, "e2_1");
+        var e1_2 = graph.insertEdge(v1, v2, "e1_2");
+        var e2_1 = graph.insertEdge(v2, v1, "e2_1");
         
-    //     var e2_3 = graph.insertEdge(v2, v3, "e2_3");
-    //     var e3_2 = graph.insertEdge(v3, v2, "e3_2");
+        var e2_3 = graph.insertEdge(v2, v3, "e2_3");
+        var e3_2 = graph.insertEdge(v3, v2, "e3_2");
         
-    //     var e3_1 = graph.insertEdge(v4, v1, "e3_1");
-    //     var e4_1 = graph.insertEdge(v4, v1, "e4_1");
+        var e3_1 = graph.insertEdge(v3, v1, "e3_1");
         
-    //     var allEdges = graph.getAllEdges();
+        var e4_1 = graph.insertEdge(v4, v1, "e4_1");
+        
+        var allEdges = graph.getAllEdges();
+        expect(allEdges.length).toEqual(6);
+        expect(graph.getIncidentEdges(v3).length).toEqual(3);
 
-
-    //     expect(allEdges.length).toEqual(6);
+        graph.removeVertex(v1);
         
-    //     graph.removeVertex(v1);
-        
-    //     allEdges = graph.getAllEdges();
-    //     expect(allEdges.length).toEqual(2);
+        allEdges = graph.getAllEdges();
+        expect(allEdges.length).toEqual(2);
 
-    //     expect(graph.getIncidentEdges(v3).length).toEqual(0);
-    //     expect(graph.getIncidentEdges(v4).length).toEqual(0);
+        var v3Edges = graph.getIncidentEdges(v3);
+        expect(v3Edges.length).toEqual(2);
+        expect(v3Edges[0]).toBe(e2_3);
+        expect(v3Edges[1]).toBe(e3_2);
 
-    // });
+        // {v4} should no longer have any edges, as it only had one connected to the late {v1}.
+        expect(graph.getIncidentEdges(v4).length).toEqual(0);
+
+    });
 
     test('graph_removeEdge', () => {
         var graph = new GraphImpl();
