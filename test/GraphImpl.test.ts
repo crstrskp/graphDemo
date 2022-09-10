@@ -198,6 +198,13 @@ describe('GraphImpl_testSuite', () =>
 
         expect(graph.isOfTypeVertex(v)).toBe(true);
         expect(graph.isOfTypeVertex(undefined)).toBe(false);
+
+        var v2 = graph.insertVertex("v2");
+
+        expect(graph.isOfTypeVertex(v2)).toBe(true);
+        
+        var v3 = graph.insertVertex(v2); // this is just redundant and should never be used like this. 
+        expect(graph.isOfTypeVertex(v3)).toBe(true);
     })
 
     test('graph_insertEdge', () => {
