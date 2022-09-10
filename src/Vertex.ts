@@ -1,30 +1,33 @@
 import { Edge } from "./Edge";
+import { IVertex } from "./IVertex";
 
-export class Vertex
+export class Vertex implements IVertex
 {
     label : string; 
-    visited : boolean; // used for iterating via search algorithms
-    connectedEdges: Edge[];
+    visited : boolean;  // used for iterating via search algorithms
+    fee : number;      
+    object : any; 
+    
 
-    setLabel(s : string) { this.label = s; }
+    public setLabel(s : string) { this.label = s; }
+    public getLabel() { return this.label; }
 
     constructor(label : string) {
-        this.connectedEdges = new Array<Edge>();
         this.label = label; 
         this.visited = false; 
+        this.fee = -1;
     }
 
-    public isAdjacent(v : Vertex) : boolean
-    {
-        this.connectedEdges.forEach((element) => {
-            // console.log("this element is connected to: ", element.start.label, " and: ", element.end.label)
-            if (element.start == v || element.end == v)
-            {
-                console.log("should be returning true; element: ", element.start.label,"->", element.end.label, "v: ", v.label);
-                return true;
-            }
-        });
-
-        return false;
+    public updateCost() {
+        // find pool
+        // update price ^^ 
+            //timedAwait ?? this.object.UpdatePrice();
+        // set cost to price ^^ 
+            //this.cost = this.
     }
+
+    public getCost() { return this.fee; }
+
+    public getObject() { return this.object; }
+
 }
