@@ -7,13 +7,12 @@ export class Vertex implements IVertex
     visited : boolean;  // used for iterating via search algorithms
     fee : number;      
     object : any; 
-    // connectedEdges: Edge[];
+    
 
     public setLabel(s : string) { this.label = s; }
     public getLabel() { return this.label; }
 
     constructor(label : string) {
-        // this.connectedEdges = new Array<Edge>();
         this.label = label; 
         this.visited = false; 
         this.fee = -1;
