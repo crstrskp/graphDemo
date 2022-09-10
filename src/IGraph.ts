@@ -3,6 +3,9 @@ import { Vertex } from "./Vertex";
 
 export interface IGraph
 {
+    edges : Edge[];
+    vertices : Vertex[];
+
     /**
      * return an array of all the vertices of the graph.
      * @Input: None; @Output: array of vertices
@@ -25,11 +28,11 @@ export interface IGraph
 
 
     /**
-     * Returns the endvertex of edge {e} distinct from vertex {v}. An error occurs if {e} is not incident on {v}.
+     * Returns the endvertex of edge {e} distinct from vertex {v}. Returns undefined if {e} is not incident on {v}.
      * @param v the vertex of which the opposite is sought. 
      * @param e the edge of which the endVertex is sought. 
      */
-    getOpposite(v : Vertex, e : Edge) : Vertex;
+    getOpposite(v : Vertex, e : Edge) : Vertex | undefined;
 
 
     /**
@@ -74,12 +77,12 @@ export interface IGraph
      * Remove vertex v and all its incident edges.
      * @param v The vertex that are to be removed. 
      */
-    removeVertex(v : Vertex) : undefined; 
+    removeVertex(v : Vertex) : any; 
 
     /**
      * Remove edge {e}. 
      * @param e The edge that are to be removed. 
      */
-    removeEdge(e : Edge) : undefined
+    removeEdge(e : Edge) : any
 }
 
