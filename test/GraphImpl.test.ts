@@ -1,8 +1,8 @@
 import { Edge } from "../src/Edge";
-import { GraphImpl } from "../src/GraphImpl";
+import { GraphImpl } from '../src/GraphImpl';
 import { Vertex } from '../src/Vertex';
 
-describe('GraphImpl_testSuite', () => 
+describe('IGraph_testSuite', () => 
 {
     test('graph_getAllVertices', () => 
     {
@@ -376,4 +376,101 @@ describe('GraphImpl_testSuite', () =>
         vertices = tmpVerts; 
         expect(vertices.length).toBe(2);
     });
+
+    test('createSubGraph', () => 
+    {
+        // build the main graph
+        var graph = new GraphImpl();
+
+        var v0 = graph.insertVertex("v0");
+        var v1 = graph.insertVertex("v1");
+        var v2 = graph.insertVertex("v2");
+        var v3 = graph.insertVertex("v3");
+
+        var e0_1 = graph.insertEdge(v0, v1, 5);
+        var e0_2 = graph.insertEdge(v0, v2, 2);
+        var e2_1 = graph.insertEdge(v2, v1, 1);
+
+        
+
+        var v0dists = graph.bellmanFord(v0);
+
+        expect(v0dists.get(v1)).toBe(3); // expect shortest path to have a weight of 3; e0_2 (2) + e2_1 (1). 
+
+
+        // get subgraph from two points
+
+
+        // perhaps not relevant; check to see edges and vertices are removed from subgraph as well ? 
+
+    })
+});
+
+describe('IGraphSearch_testSuite', () => 
+{
+    test('graphSearch_bellmanFord', () => 
+    {
+
+        var graph = new GraphImpl();
+
+        var v0 = graph.insertVertex("v0");
+        var v1 = graph.insertVertex("v1");
+        var v2 = graph.insertVertex("v2");
+        var v3 = graph.insertVertex("v3");
+
+        var e0_1 = graph.insertEdge(v0, v1, 5);
+        var e0_1a = graph.insertEdge(v0, v1, 6);
+        var e1_2 = graph.insertEdge(v1, v2, 7);
+        // var e1_4 = graph.insertEdge(v1, v4, -5);
+        var e1_3 = graph.insertEdge(v1, v3, 6);
+
+        expect(e0_1.cost).toBe(5);
+
+        var vDists = graph.bellmanFord(v0);
+
+        expect(vDists.get(v0)).toBe(0);
+        expect(vDists.get(v1)).toBe(5);
+        expect(vDists.get(v2)).toBe(12);
+        expect(vDists.get(v3)).toBe(11);
+    });
+
+    test('graphSearch_bellmanFord_negativeCycle', () => 
+    {
+        var graph = new GraphImpl();
+
+        var A = graph.insertVertex("a");
+        var B = graph.insertVertex("b");
+        var C = graph.insertVertex("c");
+        var D = graph.insertVertex("d");
+        var E = graph.insertVertex("e");
+        var F = graph.insertVertex("f");
+
+        graph.getAllVertices().forEach((v) => 
+        {
+            v.fee = 0;
+        });
+
+        var eA_B = graph.insertEdge(A, B, 8.7);
+        var eA_F = graph.insertEdge(A, F, 3.8);
+        
+        var eB_C = graph.insertEdge(B, C, 1.3);
+        var eB_E = graph.insertEdge(B, E, 7.5);
+        
+        var eC_D = graph.insertEdge(C, D, 2.1);
+        
+        var eD_E = graph.insertEdge(D, E, 1.9);
+        
+        var eE_B = graph.insertEdge(E, B, 5.8);
+        var eE_C = graph.insertEdge(E, C, -5.0);
+        var eE_D = graph.insertEdge(E, D, 3.1);
+        
+        var eF_E = graph.insertEdge(F, E, 12.0);
+        var eF_A = graph.insertEdge(F, A, 8.0);
+        
+        
+        // var vDists = graph.bellmanFord(v0);
+
+        expect(graph.bmf_negativeCycles().length).toBe(1)
+
+    })
 });

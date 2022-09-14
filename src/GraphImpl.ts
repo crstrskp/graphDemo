@@ -2,8 +2,12 @@ import { Edge } from "./Edge";
 import { IGraph } from "./IGraph";
 import { Vertex } from "./Vertex";
 import { IVertex } from './IVertex';
+import { IGraphSearch } from "./IGraphSearch";
+import { displayPartsToString } from "typescript";
+import { SubGraph } from "./SubGraph";
+import { ISubGraphBuilder } from "./ISubGraphBuilder";
 
-export class GraphImpl implements IGraph
+export class GraphImpl implements IGraph, IGraphSearch, ISubGraphBuilder
 {
     edges : Edge[];
     vertices : Vertex[];
@@ -11,6 +15,72 @@ export class GraphImpl implements IGraph
     constructor() {
         this.edges = [];
         this.vertices = [];
+    }
+
+    bellmanFord(src : Vertex) {
+        var vDists = new Map<Vertex, number>();
+        
+
+        this.vertices.forEach((v) => {
+            vDists.set(v, Number.MAX_VALUE);
+        });
+
+        vDists.set(src, 0);
+
+
+        for (var i = 0; i < this.vertices.length; i++)
+        {
+            for (var j = 0; j < this.edges.length; j++)
+            {
+                var start = this.edges[j].start;
+                var end = this.edges[j].end;
+                var cost = this.edges[j].getCost();
+
+                var startCost = vDists.get(start); 
+                if (startCost! + cost < vDists.get(end)!)
+                    vDists.set(end, startCost! + cost);
+            }
+        }
+
+        return vDists;
+    }
+
+    bmf_negativeCycles() 
+    {
+        var cycles : SubGraph[] = [];
+
+        // for (var i =  0; i < this.vertices.length; i++)
+        // {
+            // console.log(this.vertices[i]);
+
+            var vDists = this.bellmanFord(this.vertices[0]);
+
+            console.log(vDists);
+
+            for (var j = 0; j < this.edges.length; j++)
+            {
+                var start = this.edges[j].start;
+                var end = this.edges[j].end;
+                var cost = this.edges[j].getCost();
+                
+                var c = vDists.get(start)! + cost;
+                if (c < vDists.get(end)!)
+                {
+                    console.log("TODO: Return negative cycle as subgraph");
+                    // cycles.push(SOME SUBGRAPH ?? )
+                    var cycleEdges : Edge[] =[];
+                    var cycleVertices : Vertex[] = []; // dno if these are needed? 
+                    cycles.push(new SubGraph(cycleEdges,cycleVertices,start));
+                }
+            }
+        // }
+
+        return cycles;
+    }
+
+    createSubGraph(src : Vertex, dest : Vertex) : SubGraph
+    {
+        return new SubGraph(this.edges, this.vertices, src);
     }
 
     getAllVertices(): Vertex[] 
@@ -114,6 +184,11 @@ export class GraphImpl implements IGraph
     insertEdge(v: Vertex, w: Vertex, o: any): Edge 
     {
         var e = new Edge(v, w);
+        if (Number.isFinite(o))
+        {
+            e.setCost(o);
+        }
+
         this.edges.push(e);
         return e; 
     }
