@@ -4,6 +4,7 @@ export class Edge
 {
     start : Vertex; 
     end : Vertex; 
+    obj : any;
 
     cost : number; 
     /**
@@ -17,7 +18,14 @@ export class Edge
     }
 
     getCost(): number {
-        return this.cost;
+        if (Number.isFinite(this.cost))
+        {
+            return this.cost;
+        }
+        else
+        {
+            return this.obj.getCost();
+        }
     }
 
     setCost(cost : number)  
