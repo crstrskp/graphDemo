@@ -1,13 +1,11 @@
 import { Edge } from "./Edge";
 import { IGraph } from "./IGraph";
 import { Vertex } from "./Vertex";
-import { IVertex } from './IVertex';
 import { IGraphSearch } from "./IGraphSearch";
-import { displayPartsToString } from "typescript";
-import { SubGraph } from "./SubGraph";
-import { ISubGraphBuilder } from "./ISubGraphBuilder";
+import { Path } from "./Path";
+import { IPathBuilder } from './IPathBuilder';
 
-export class GraphImpl implements IGraph, IGraphSearch, ISubGraphBuilder
+export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
 {
     edges : Edge[];
     vertices : Vertex[];
@@ -47,40 +45,55 @@ export class GraphImpl implements IGraph, IGraphSearch, ISubGraphBuilder
 
     bmf_negativeCycles() 
     {
-        var cycles : SubGraph[] = [];
+        var cycles : Path[] = [];
 
-        // for (var i =  0; i < this.vertices.length; i++)
-        // {
-            // console.log(this.vertices[i]);
+        var vDists = this.bellmanFord(this.vertices[0]);
 
-            var vDists = this.bellmanFord(this.vertices[0]);
-
-            console.log(vDists);
-
-            for (var j = 0; j < this.edges.length; j++)
+        for (var j = 0; j < this.edges.length; j++)
+        {
+            var start = this.edges[j].start;
+            var end = this.edges[j].end;
+            var cost = this.edges[j].getCost();
+            
+            var c = vDists.get(start)! + cost;
+            if (c < vDists.get(end)!)
             {
-                var start = this.edges[j].start;
-                var end = this.edges[j].end;
-                var cost = this.edges[j].getCost();
-                
-                var c = vDists.get(start)! + cost;
-                if (c < vDists.get(end)!)
-                {
-                    console.log("TODO: Return negative cycle as subgraph");
-                    // cycles.push(SOME SUBGRAPH ?? )
-                    var cycleEdges : Edge[] =[];
-                    var cycleVertices : Vertex[] = []; // dno if these are needed? 
-                    cycles.push(new SubGraph(cycleEdges,cycleVertices,start));
-                }
+
+                console.log("Negative cycle detected at ", start.getLabel(), " -> ", end.getLabel());
+                cycles.push(new Path(start));
             }
-        // }
+        }
 
         return cycles;
     }
-
-    createSubGraph(src : Vertex, dest : Vertex) : SubGraph
+    
+    dijkstra_shortestPath(src: Vertex, dest: Vertex): Path 
     {
-        return new SubGraph(this.edges, this.vertices, src);
+        /*
+        1. Create a list of “distances” equal to the number of nodes and initialize each value to infinity
+        2. Set the “distance” to the starting node equal to 0
+        3. Create a list of “visited” nodes set to false for each node (since we haven’t visited any yet)
+        4. Loop through all the nodes
+            4.a Loop through all the nodes again, and pick the one that is the shortest distance away and not yet visited
+            4.b Set that node to visited
+            4.c Set the distance in the distance list to the distance to that node
+        5. The original “distance” list should now contain the shortest distance to each node or infinity if a node is unreachable from the desired starting node
+        */
+
+        var path = new Path(src); 
+
+        var unvisitedNodes = this.getAdjacentVertices(src);
+        unvisitedNodes.forEach((v) => 
+        {
+            v.visited = true; 
+            // dists.push(???)
+        });
+
+        src.setCost(0);
+        
+
+       
+        return path; 
     }
 
     getAllVertices(): Vertex[] 
@@ -128,6 +141,32 @@ export class GraphImpl implements IGraph, IGraphSearch, ISubGraphBuilder
         return incidentEdges;
     }
 
+    getIncidentStartEdges(v: Vertex): Edge[] 
+    {
+        var incidentEdges : Edge[] = [];
+
+        this.edges.forEach((edge) => {
+            if (edge.start === v)
+                if (incidentEdges.includes(edge) == false) 
+                    incidentEdges.push(edge);
+        });
+
+        return incidentEdges;    
+    }
+
+    getIncidentEndEdges(v: Vertex): Edge[] 
+    {
+        var incidentEdges : Edge[] = [];
+
+        this.edges.forEach((edge) => {
+            if (edge.end === v)
+                if (incidentEdges.includes(edge) == false) 
+                    incidentEdges.push(edge);
+        });
+
+        return incidentEdges;
+    }
+
     getOpposite(v: Vertex, e: Edge): Vertex | undefined 
     {
         if (e.start === v) return e.end;
@@ -143,6 +182,21 @@ export class GraphImpl implements IGraph, IGraphSearch, ISubGraphBuilder
         vertices.push(e.end!);
         
         return vertices; 
+    }
+
+    getAdjacentVertices(v: Vertex): Vertex[] 
+    {
+        var edges = this.getIncidentEdges(v);
+        var neighbors : Vertex[] = []; 
+
+        edges.forEach((e) => 
+        {   
+            var opp = this.getOpposite(v, e);
+            if (opp != undefined && !neighbors.includes(opp))
+                neighbors.push(opp);
+        });
+
+        return neighbors;
     }
 
     areAdjacent(v: Vertex, w: Vertex): boolean 
@@ -179,7 +233,6 @@ export class GraphImpl implements IGraph, IGraphSearch, ISubGraphBuilder
     {
         return input instanceof Vertex;
     }
-
     
     insertEdge(v: Vertex, w: Vertex, o: any): Edge 
     {
@@ -195,24 +248,14 @@ export class GraphImpl implements IGraph, IGraphSearch, ISubGraphBuilder
 
     removeVertex(v: Vertex)
     {
-        var verts : Vertex[] = [];// = this.vertices; 
-        for (var i = 0; i < this.vertices.length; i++)
+        var edges = this.getIncidentEdges(v);
+        for (var i = 0; i < edges.length; i++)
         {
-            // console.log("if ", this.vertices[i].label, " != ", v.label, " then add ", this.vertices[i].label, " to this.vertices");
-            if (this.vertices[i].label != v.label)
-            {
-                verts.push(this.vertices[i]);
-            }
-            else 
-            {
-                var vEdges = this.getIncidentEdges(v);
-                vEdges.forEach((e) => 
-                {
-                    this.removeEdge(e);
-                });
-            }
+            this.removeEdge(edges[i]);
         }
-        this.vertices = verts.reverse(); 
+
+        var i = this.vertices.indexOf(v);
+        var removedElement = this.vertices.splice(i, 1);
     }
 
     removeEdge(e: Edge) 

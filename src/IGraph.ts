@@ -26,7 +26,10 @@ export interface IGraph
      */
     getIncidentEdges(v : Vertex) : Array<Edge>;
 
+    getIncidentStartEdges(v : Vertex) : Array<Edge>;
 
+    getIncidentEndEdges(v : Vertex) : Array<Edge>; 
+    
     /**
      * Returns the endvertex of edge {e} distinct from vertex {v}. Returns undefined if {e} is not incident on {v}.
      * @param v the vertex of which the opposite is sought. 
@@ -41,6 +44,12 @@ export interface IGraph
      */
     getVertices(e : Edge) : Array<Vertex>; 
 
+
+    /**
+     * Returns an Array<Vertex> containing all adjacent vertices to v.
+     * @param v src
+     */
+    getAdjacentVertices(v : Vertex) : Array<Vertex>;
 
     /**
      * Test whether vertices {v} and {w} are adjacent. 

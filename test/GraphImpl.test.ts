@@ -55,7 +55,8 @@ describe('IGraph_testSuite', () =>
         expect(allEdges.length).toEqual(5);
     });
 
-    test('graph_getIncidentEdges', () => {
+    test('graph_getIncidentEdges', () => 
+    {
         var graph = new GraphImpl();
 
         var v1 = graph.insertVertex("v1");
@@ -114,6 +115,68 @@ describe('IGraph_testSuite', () =>
         expect(e1_2.start == v3 || e1_2.end == v3).toEqual(false);
     });
 
+    test('graph_getIncidentStartEdges', () => 
+    {
+        var graph = new GraphImpl();
+
+        var A = graph.insertVertex("A"); 
+        var B = graph.insertVertex("B"); 
+        var C = graph.insertVertex("C"); 
+
+        var eA_B = graph.insertEdge(A, B, "eA_B");
+        var eA_C = graph.insertEdge(A, C, "eA_C");
+        
+        var eB_A = graph.insertEdge(B, A, "eB_A");
+        var eB_C = graph.insertEdge(B, C, "eB_C");
+
+        var eC_A = graph.insertEdge(C, A, "eC_A");
+
+        var aStartEdges = graph.getIncidentStartEdges(A);
+        expect(aStartEdges.length).toEqual(2);
+        expect(aStartEdges[0]).toBe(eA_B);
+        expect(aStartEdges[1]).toBe(eA_C);
+        
+        var bStartEdges = graph.getIncidentStartEdges(B);
+        expect(bStartEdges.length).toEqual(2);
+        expect(bStartEdges[0]).toBe(eB_A);
+        expect(bStartEdges[1]).toBe(eB_C);
+
+        var cStartEdges = graph.getIncidentStartEdges(C);
+        expect(cStartEdges.length).toEqual(1);
+        expect(cStartEdges[0]).toBe(eC_A);
+    });
+
+    test('graph_getIncidentEndEdges', () => 
+    {
+        var graph = new GraphImpl();
+
+        var A = graph.insertVertex("A"); 
+        var B = graph.insertVertex("B"); 
+        var C = graph.insertVertex("C"); 
+
+        var eA_B = graph.insertEdge(A, B, "eA_B");
+        var eA_C = graph.insertEdge(A, C, "eA_C");
+        
+        var eB_A = graph.insertEdge(B, A, "eB_A");
+        var eB_C = graph.insertEdge(B, C, "eB_C");
+
+        var eC_A = graph.insertEdge(C, A, "eC_A");
+
+        var aEndEdges = graph.getIncidentEndEdges(A);
+        expect(aEndEdges.length).toEqual(2);
+        expect(aEndEdges[0]).toBe(eB_A);
+        expect(aEndEdges[1]).toBe(eC_A);
+        
+        var bEndEdges = graph.getIncidentEndEdges(B);
+        expect(bEndEdges.length).toEqual(1);
+        expect(bEndEdges[0]).toBe(eA_B);
+
+        var cEndEdges = graph.getIncidentEndEdges(C);
+        expect(cEndEdges.length).toEqual(2);
+        expect(cEndEdges[0]).toBe(eA_C);
+        expect(cEndEdges[1]).toBe(eB_C);
+    });
+
     test('graph_getOpposite', () => {
         /**
      * Returns the endvertex of edge {e} distinct from vertex {v}. Returns undefined if {e} is not incident on {v}.
@@ -147,6 +210,30 @@ describe('IGraph_testSuite', () =>
         expect(vertices[0]).toEqual(v1);
         expect(vertices[1]).toEqual(v2);
         
+    });
+
+    test('graph_getAdjacentVertices', () => 
+    {
+        var graph = new GraphImpl();
+
+        var a = graph.insertVertex("A");
+        var b = graph.insertVertex("B");
+        var c = graph.insertVertex("C");
+        var d = graph.insertVertex("D");
+        var e = graph.insertVertex("E");
+
+        var eA_B = graph.insertEdge(a, b, 1);
+        var eA_B = graph.insertEdge(a, b, 2);
+        var eB_C = graph.insertEdge(b, c, 1);
+        var eC_D = graph.insertEdge(c, d, 1);
+        var eA_D = graph.insertEdge(a, d, 1);
+        var eD_E = graph.insertEdge(d, e, 1);
+
+        var aAdjacentNodes = graph.getAdjacentVertices(a);
+        expect(aAdjacentNodes.length).toEqual(2);
+        expect(aAdjacentNodes[0]).toBe(b);
+        expect(aAdjacentNodes[1]).toBe(d);
+
     });
 
     test('graph_areAdjacent', () => 
@@ -249,7 +336,6 @@ describe('IGraph_testSuite', () =>
         expect(allVertices.length).toEqual(1);
         expect(allVertices[0]).toBe(v2);
     });
-
     
     test('graph_removeIncidentEdgeWhenRemovingVertex', () => {
         var graph = new GraphImpl(); 
@@ -319,7 +405,6 @@ describe('IGraph_testSuite', () =>
         expect(allEdges.length).toEqual(0);
         
     });
-
     
     test('arrayRemovalTest', () => {
         var numbers : number[] = [];
@@ -421,7 +506,6 @@ describe('IGraphSearch_testSuite', () =>
         var e0_1 = graph.insertEdge(v0, v1, 5);
         var e0_1a = graph.insertEdge(v0, v1, 6);
         var e1_2 = graph.insertEdge(v1, v2, 7);
-        // var e1_4 = graph.insertEdge(v1, v4, -5);
         var e1_3 = graph.insertEdge(v1, v3, 6);
 
         expect(e0_1.cost).toBe(5);
@@ -447,7 +531,7 @@ describe('IGraphSearch_testSuite', () =>
 
         graph.getAllVertices().forEach((v) => 
         {
-            v.fee = 0;
+            v.cost = 0;
         });
 
         var eA_B = graph.insertEdge(A, B, 8.7);
@@ -467,10 +551,103 @@ describe('IGraphSearch_testSuite', () =>
         var eF_E = graph.insertEdge(F, E, 12.0);
         var eF_A = graph.insertEdge(F, A, 8.0);
         
-        
+
         // var vDists = graph.bellmanFord(v0);
 
         expect(graph.bmf_negativeCycles().length).toBe(1)
 
-    })
+    });
+
+    test('graphSearch_bellmanFord__multiple_negativeCycles', () => 
+    {
+        var graph = new GraphImpl();
+
+        var A = graph.insertVertex("a");
+        var B = graph.insertVertex("b");
+        var C = graph.insertVertex("c");
+        var D = graph.insertVertex("d");
+        var E = graph.insertVertex("e");
+        var F = graph.insertVertex("f");
+        var G = graph.insertVertex("g");
+        var H = graph.insertVertex("h");
+
+        graph.getAllVertices().forEach((v) => 
+        {
+            v.cost = 0;
+        });
+
+        var eA_B = graph.insertEdge(A, B, 8.7);
+        var eA_F = graph.insertEdge(A, F, 3.8);
+        
+        var eB_C = graph.insertEdge(B, C, 1.3);
+        var eB_E = graph.insertEdge(B, E, 7.5);
+        
+        var eC_D = graph.insertEdge(C, D, 2.1);
+        
+        var eD_E = graph.insertEdge(D, E, 1.9);
+        
+        var eE_B = graph.insertEdge(E, B, 5.8);
+        var eE_C = graph.insertEdge(E, C, -5.0);
+        var eE_D = graph.insertEdge(E, D, 3.1);
+        
+        var eF_E = graph.insertEdge(F, E, 12.0);
+        var eF_A = graph.insertEdge(F, A, 8.0);
+        
+        var eF_G = graph.insertEdge(F, G, 2.0);
+
+        var eG_A = graph.insertEdge(G, A, -6.0);
+
+        
+        // var vDists = graph.bellmanFord(v0);
+
+
+        // negative found circles: 
+            // A->B (discovered due to G->A being negative, thus A->B is 'cheaper' then it was originally. )
+            // A->F (discovered due to G->A being negative, thus A->F is 'cheaper' then it was originally. )
+            
+            // C->D (discovered due to E->C being negative, thus C->D is 'cheaper' then it was originally. )
+            
+            // C->D FOUND TWICE, probably due to B->C->D->E->C (added B to the cycle). dno why it isn't added to the cycles
+
+        var negativeCycles = graph.bmf_negativeCycles();
+
+        expect(graph.bmf_negativeCycles().length).toBe(3);
+        console.log("why 3!?");
+    });
+
+    test('dijkstra_shortestPath', () => 
+    {
+        var graph = new GraphImpl();
+
+        var A = graph.insertVertex("a");
+        var B = graph.insertVertex("b");
+        var E = graph.insertVertex("e");
+        var F = graph.insertVertex("f");
+
+        graph.getAllVertices().forEach((v) => 
+        {
+            v.cost = 0;
+            v.visited = false; 
+        });
+
+        var eA_B = graph.insertEdge(A, B, 8.7);
+        var eA_F = graph.insertEdge(A, F, 3.8);
+        
+        var eB_E = graph.insertEdge(B, E, 7.5);
+
+        var eF_E = graph.insertEdge(F, E, 12.0);
+    
+        // A->B->E costs 16.2
+        // A->F->E costs 15.8
+
+        var path = graph.dijkstra_shortestPath(A, E);
+        
+        expect(path.getTotalCost()).toEqual(15.8);
+
+        var step = path.next(); 
+        expect(step).toBe(eA_F);
+        var step2 = path.next(); 
+        expect(step2).toBe(eF_E);
+
+    });
 });
