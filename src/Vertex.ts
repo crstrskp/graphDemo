@@ -5,7 +5,7 @@ export class Vertex implements IVertex
 {
     label : string; 
     visited : boolean;  // used for iterating via search algorithms
-    fee : number;      
+    cost : number;      
     object : any; 
     
 
@@ -15,7 +15,7 @@ export class Vertex implements IVertex
     constructor(label : string) {
         this.label = label; 
         this.visited = false; 
-        this.fee = -1;
+        this.cost = -1;
     }
 
     public updateCost() {
@@ -26,7 +26,9 @@ export class Vertex implements IVertex
             //this.cost = this.
     }
 
-    public getCost() { return this.fee; }
+    public setCost(cost : number) { this.cost = cost; }
+    
+    public getCost() { return this.cost; }
 
     public getObject() { return this.object; }
 
