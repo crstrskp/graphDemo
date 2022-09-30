@@ -597,9 +597,7 @@ describe('IGraphSearch_testSuite', () =>
 
         var eG_A = graph.insertEdge(G, A, -6.0);
 
-        
         // var vDists = graph.bellmanFord(v0);
-
 
         // negative found circles: 
             // A->B (discovered due to G->A being negative, thus A->B is 'cheaper' then it was originally. )
@@ -611,7 +609,7 @@ describe('IGraphSearch_testSuite', () =>
 
         var negativeCycles = graph.bmf_negativeCycles();
 
-        expect(graph.bmf_negativeCycles().length).toBe(3);
+        expect(negativeCycles.length).toBe(3);
         console.log("why 3!?");
     });
 
