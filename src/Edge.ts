@@ -7,6 +7,7 @@ export class Edge
     obj : any;
 
     cost : number; 
+    prev : Vertex | undefined;
     /**
      *
      */
@@ -28,8 +29,9 @@ export class Edge
         }
     }
 
-    setCost(cost : number)  
-    {
-        this.cost = cost;
-    }
+    public setCost(cost : number) { this.cost = cost; }
+
+    public getPrev() { return this.prev; }
+
+    public setPrev(p : Vertex) { this.prev = p; }
 }
