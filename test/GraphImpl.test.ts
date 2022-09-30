@@ -667,12 +667,23 @@ describe('IGraphSearch_testSuite', () =>
         var edges = graph.getAllEdges();
         expect(edges.length).toEqual(4);
 
+        expect(edges[0].cost).toEqual(8.7);
+        expect(edges[1].cost).toEqual(3.8);
+        expect(edges[2].cost).toEqual(7.5);
+        expect(edges[3].cost).toEqual(12.0);
+
         var sortedEdges = graph.sortEdgesASC(edges);
 
         expect(sortedEdges[0].cost).toEqual(3.8);
         expect(sortedEdges[1].cost).toEqual(7.5);
         expect(sortedEdges[2].cost).toEqual(8.7);
         expect(sortedEdges[3].cost).toEqual(12.0);
+
+        // ensure original arary isn't mutated
+        expect(edges[0].cost).toEqual(8.7);
+        expect(edges[1].cost).toEqual(3.8);
+        expect(edges[2].cost).toEqual(7.5);
+        expect(edges[3].cost).toEqual(12.0);
     });
 
     test('sortEdgesDESC', () => 
@@ -692,11 +703,22 @@ describe('IGraphSearch_testSuite', () =>
         var edges = graph.getAllEdges();
         expect(edges.length).toEqual(4);
 
+        expect(edges[0].cost).toEqual(8.7);
+        expect(edges[1].cost).toEqual(3.8);
+        expect(edges[2].cost).toEqual(7.5);
+        expect(edges[3].cost).toEqual(12.0);
+
         var sortedEdges = graph.sortEdgesDESC(edges);
 
         expect(sortedEdges[0].cost).toEqual(12.0);
         expect(sortedEdges[1].cost).toEqual(8.7);
         expect(sortedEdges[2].cost).toEqual(7.5);
         expect(sortedEdges[3].cost).toEqual(3.8);
+
+        // Ensure original array isn't mutated
+        expect(edges[0].cost).toEqual(8.7);
+        expect(edges[1].cost).toEqual(3.8);
+        expect(edges[2].cost).toEqual(7.5);
+        expect(edges[3].cost).toEqual(12.0);
     });
 });

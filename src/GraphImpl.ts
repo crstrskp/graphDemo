@@ -293,7 +293,10 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
 
     sortEdgesASC(edges : Edge[]) : Edge[] 
     {
-        return edges.sort((e1, e2) => 
+        var sortedArray : Edge[] = [];
+        edges.forEach((e) => sortedArray.push(e));
+
+        return sortedArray.sort((e1, e2) => 
         {
             if (e1.cost > e2.cost)
                 return 1; 
@@ -307,7 +310,10 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
 
     sortEdgesDESC(edges : Edge[]) : Edge[] 
     {
-        return edges.sort((e1, e2) => 
+        var sortedArray : Edge[] = [];
+        edges.forEach((e) => sortedArray.push(e));
+
+        return sortedArray.sort((e1, e2) => 
         {
             if (e1.cost < e2.cost)
                 return 1; 
