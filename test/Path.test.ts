@@ -83,4 +83,24 @@ describe('Path_testSuite', () =>
         expect(path.next()).toBe(A);
         expect(path.peek()).toBe(eA_B);
     });
+
+    test('getTotalCost', () => 
+    {
+        var graph = new GraphImpl(); 
+
+        var A = graph.insertVertex("A");
+        var B = graph.insertVertex("B");
+        var C = graph.insertVertex("C");
+        var eA_B = graph.insertEdge(A, B, 8.7);
+        
+        var eB_C = graph.insertEdge(B, C, 7.5);
+   
+        var path = new Path(A);
+        path.addStep(eA_B);
+        path.addStep(B);
+        path.addStep(eB_C);
+        path.addStep(C);
+
+        expect(path.getTotalCost()).toEqual(16.2);
+    });
 });
