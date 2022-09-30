@@ -30,19 +30,6 @@ export class Path
         });
 
         
-        
-        // var n = this.next();
-        
-        // while (n != undefined) 
-        // {
-        //     if (n instanceof Edge)
-        //     {
-        //         cost += n.getCost();
-        //     }
-
-        //     n = this.next(); 
-        // }
-
         this.totalCost = cost; 
     }
 
