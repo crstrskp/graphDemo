@@ -648,4 +648,55 @@ describe('IGraphSearch_testSuite', () =>
         expect(step2).toBe(eF_E);
 
     });
+
+    test('sortEdgesASC', () => 
+    {
+
+        var graph = new GraphImpl(); 
+
+        var A = graph.insertVertex("a");
+        var B = graph.insertVertex("b");
+        var E = graph.insertVertex("e");
+        var F = graph.insertVertex("f");
+        
+        var eA_B = graph.insertEdge(A, B, 8.7);
+        var eA_F = graph.insertEdge(A, F, 3.8);
+        var eB_E = graph.insertEdge(B, E, 7.5);
+        var eF_E = graph.insertEdge(F, E, 12.0);
+
+        var edges = graph.getAllEdges();
+        expect(edges.length).toEqual(4);
+
+        var sortedEdges = graph.sortEdgesASC(edges);
+
+        expect(sortedEdges[0].cost).toEqual(3.8);
+        expect(sortedEdges[1].cost).toEqual(7.5);
+        expect(sortedEdges[2].cost).toEqual(8.7);
+        expect(sortedEdges[3].cost).toEqual(12.0);
+    });
+
+    test('sortEdgesDESC', () => 
+    {
+        var graph = new GraphImpl(); 
+
+        var A = graph.insertVertex("a");
+        var B = graph.insertVertex("b");
+        var E = graph.insertVertex("e");
+        var F = graph.insertVertex("f");
+        
+        var eA_B = graph.insertEdge(A, B, 8.7);
+        var eA_F = graph.insertEdge(A, F, 3.8);
+        var eB_E = graph.insertEdge(B, E, 7.5);
+        var eF_E = graph.insertEdge(F, E, 12.0);
+
+        var edges = graph.getAllEdges();
+        expect(edges.length).toEqual(4);
+
+        var sortedEdges = graph.sortEdgesDESC(edges);
+
+        expect(sortedEdges[0].cost).toEqual(12.0);
+        expect(sortedEdges[1].cost).toEqual(8.7);
+        expect(sortedEdges[2].cost).toEqual(7.5);
+        expect(sortedEdges[3].cost).toEqual(3.8);
+    });
 });

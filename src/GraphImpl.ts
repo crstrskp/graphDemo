@@ -62,13 +62,14 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
 
                 console.log("Negative cycle detected at ", start.getLabel(), " -> ", end.getLabel());
                 cycles.push(new Path(start));
+                // TODO - return actual path rather than just start node. 
             }
         }
 
         return cycles;
     }
     
-    dijkstra_shortestPath(src: Vertex, dest: Vertex): Path 
+    dijkstra_shortestPath(src: Vertex, dest: Vertex) : Path 
     {
         /*
         1. Create a list of “distances” equal to the number of nodes and initialize each value to infinity
@@ -80,21 +81,41 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
             4.c Set the distance in the distance list to the distance to that node
         5. The original “distance” list should now contain the shortest distance to each node or infinity if a node is unreachable from the desired starting node
         */
+        var path = new Path(src); 
 
+
+        // 1. 
+        var vDists = new Map<Vertex, number>();
+
+        this.vertices.forEach((v) => {
+            vDists.set(v, Number.MAX_VALUE);
+        });
+
+        // 2.
+        vDists.set(src, 0);
        
-        var unvisitedNodes = this.getAdjacentVertices(src);
-        unvisitedNodes.forEach((v) => 
+
+        //3. 
+        this.vertices.forEach((v) => 
         {
             v.visited = false; 
-            // dists.push(???)
         });
+
+        //4. 
+        var shortestDist = Number.MAX_VALUE; 
         
-        src.setCost(0);
+        // OFF TRACK FROM HERE: 
+        var unvisitedEdges = this.getIncidentEdges(src);
         
         
-        // build path
-        var path = new Path(src); 
-       
+        unvisitedEdges.forEach((e) => 
+        {
+
+        });
+
+
+
+
         return path; 
     }
 
@@ -268,7 +289,33 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
                 delete this.edges[i];
         }
         this.getAllEdges(); // updates the this.edges array
-        
     }
 
+    sortEdgesASC(edges : Edge[]) : Edge[] 
+    {
+        return edges.sort((e1, e2) => 
+        {
+            if (e1.cost > e2.cost)
+                return 1; 
+
+            if (e1.cost < e2.cost)
+                return -1; 
+
+            return 0; 
+        })
+    }
+
+    sortEdgesDESC(edges : Edge[]) : Edge[] 
+    {
+        return edges.sort((e1, e2) => 
+        {
+            if (e1.cost < e2.cost)
+                return 1; 
+
+            if (e1.cost > e2.cost)
+                return -1; 
+
+            return 0; 
+        })
+    }
 }
