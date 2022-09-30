@@ -30,11 +30,12 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         {
             for (var j = 0; j < this.edges.length; j++)
             {
-                var start = this.edges[j].start;
-                var end = this.edges[j].end;
-                var cost = this.edges[j].getCost();
+                var start   = this.edges[j].start;
+                var end     = this.edges[j].end;
+                var cost    = this.edges[j].getCost();
 
                 var startCost = vDists.get(start); 
+              
                 if (startCost! + cost < vDists.get(end)!)
                     vDists.set(end, startCost! + cost);
             }
@@ -80,18 +81,19 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         5. The original “distance” list should now contain the shortest distance to each node or infinity if a node is unreachable from the desired starting node
         */
 
-        var path = new Path(src); 
-
+       
         var unvisitedNodes = this.getAdjacentVertices(src);
         unvisitedNodes.forEach((v) => 
         {
-            v.visited = true; 
+            v.visited = false; 
             // dists.push(???)
         });
-
+        
         src.setCost(0);
         
-
+        
+        // build path
+        var path = new Path(src); 
        
         return path; 
     }
