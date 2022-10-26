@@ -16,7 +16,7 @@ export class Vertex implements IVertex
     constructor(label : string) {
         this.label = label; 
         this.visited = false; 
-        this.cost = -1;
+        this.cost = 0;
     }
 
     public updateCost() {
