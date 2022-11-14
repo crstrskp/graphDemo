@@ -1,6 +1,6 @@
 import { Edge } from "./Edge";
 import { IGraph } from "./IGraph";
-import { Vertex } from "./Vertex";
+import { Vertex } from './Vertex';
 import { IGraphSearch } from "./IGraphSearch";
 import { Path } from "./Path";
 import { IPathBuilder } from './IPathBuilder';
@@ -18,7 +18,6 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
     bellmanFord(src : Vertex) {
         var vDists = new Map<Vertex, number>();
         
-
         this.vertices.forEach((v) => {
             vDists.set(v, Number.MAX_VALUE);
         });
@@ -37,15 +36,54 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
                 var startCost = vDists.get(start); 
               
                 if (startCost! + cost < vDists.get(end)!)
+                {
                     vDists.set(end, startCost! + cost);
+                    end.prev = this.edges[j];
+                    this.edges[j].prev = start; 
+                }
             }
         }
 
         return vDists;
     }
 
+    bellmanFord_shortestPath(src : Vertex, dest : Vertex) : Path
+    {
+        var path = new Path(); 
+        path.addStep(dest);
+
+        var bmf = this.bellmanFord(src);
+
+        // this.bmf_print(bmf);
+
+        var step : Vertex|Edge|undefined = dest;
+        while(step != undefined)
+        {
+            step = step.getPrev()!;
+            path.addStep(step!);
+        }
+        path.reverse();
+        
+        path.next(); // delete me - removes the first "dest" node, however this shouldn't be done like this! 
+        return path; 
+    }
+
+    bmf_print(bmf: Map<Vertex, number>) 
+    {
+        var output = "Node\tDistance from source\n";
+
+        bmf.forEach((value, key) => 
+        {
+            output += key.label + "\t\t" + value + "\n";
+        });
+
+        console.log(output);
+    }
+
     bmf_negativeCycles() 
     {
+        var path = new Path();
+        
         var cycles : Path[] = [];
 
         var vDists = this.bellmanFord(this.vertices[0]);
@@ -59,10 +97,10 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
             var c = vDists.get(start)! + cost;
             if (c < vDists.get(end)!)
             {
-
-                console.log("Negative cycle detected at ", start.getLabel(), " -> ", end.getLabel());
-                cycles.push(new Path(start));
-                // TODO - return actual path rather than just start node. 
+                // console.log("Negative cycle detected at ", start.getLabel(), " -> ", end.getLabel());
+                path.addStep(start);
+                cycles.push(path);
+                console.log("TODO - return actual path rather than just start node. ");
             }
         }
 
@@ -71,52 +109,85 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
     
     dijkstra_shortestPath(src: Vertex, dest: Vertex) : Path 
     {
-        /*
-        1. Create a list of “distances” equal to the number of nodes and initialize each value to infinity
-        2. Set the “distance” to the starting node equal to 0
-        3. Create a list of “visited” nodes set to false for each node (since we haven’t visited any yet)
-        4. Loop through all the nodes
-            4.a Loop through all the nodes again, and pick the one that is the shortest distance away and not yet visited
-            4.b Set that node to visited
-            4.c Set the distance in the distance list to the distance to that node
-        5. The original “distance” list should now contain the shortest distance to each node or infinity if a node is unreachable from the desired starting node
-        */
-        var path = new Path(src); 
-
-
-        // 1. 
-        var vDists = new Map<Vertex, number>();
+        var path = new Path(); 
+        
+        var vDists = new Map<string, number>();
 
         this.vertices.forEach((v) => {
-            vDists.set(v, Number.MAX_VALUE);
+            vDists.set(v.label, Number.MAX_VALUE);
         });
 
-        // 2.
-        vDists.set(src, 0);
-       
-
-        //3. 
-        this.vertices.forEach((v) => 
+        vDists.set(src.label, 0);
+        var unvisitedEdges = this.getIncidentStartEdges(src);
+        unvisitedEdges = this.sortEdgesASC(unvisitedEdges);
+        unvisitedEdges.forEach((e) => e.prev = src);
+        
+        while(unvisitedEdges.length > 0)
         {
-            v.visited = false; 
-        });
+            var currentCost = vDists.get(unvisitedEdges[0].start?.label)! + unvisitedEdges[0].cost;
+            // console.log("currentEdge: ",unvisitedEdges[0].start?.label+"->"+unvisitedEdges[0].end?.label, "nodeCost: ", vDists.get(unvisitedEdges[0].start?.label)!, "currentCost: ", currentCost);
+         
+            if (currentCost < vDists.get(unvisitedEdges[0].end.label)!)
+            {
+                vDists.set(unvisitedEdges[0].end.label, currentCost)
+                
+                var node = this.getVertexByLabel(unvisitedEdges[0].end.label);
+                if (node == undefined) continue; // end of the line? 
+                
+                // console.log(node.label);
+                node.prev = unvisitedEdges[0];
+                
+                var newEdges = this.getIncidentStartEdges(node);
+                newEdges.forEach((e) => {
+                    e.prev = node;
+                    // console.log("added new edge from: ", e.start.label, " to ", e.end.label);
+                    unvisitedEdges.push(e)
+                });
+            } 
 
-        //4. 
-        var shortestDist = Number.MAX_VALUE; 
-        
-        // OFF TRACK FROM HERE: 
-        var unvisitedEdges = this.getIncidentEdges(src);
-        
-        
-        unvisitedEdges.forEach((e) => 
+            // prepare for next iteration: 
+            unvisitedEdges.shift();
+            unvisitedEdges = this.sortEdgesASC(unvisitedEdges);
+
+            // early termination
+            if (unvisitedEdges[0] == undefined) continue; 
+        }
+
+        if (dest.prev == undefined) 
         {
+            console.log("we did not find a path leading to destination");
+            return path;
+        } 
 
+        // console.log(vDists);
+
+        // build path
+        var step : Vertex|Edge|undefined = dest;
+        path.addStep(step);
+        while(step != undefined)
+        {
+            step = step.getPrev()!;
+            if (step instanceof Vertex) 
+                path.addStep(step!);
+
+            if (step instanceof Edge) 
+                path.addStep(step!);
+        }
+
+        path.reverse();
+        // console.log(path.toString());
+        return path;
+    }
+    
+    getVertexByLabel(label: string) : Vertex | undefined
+    {
+        var result : Vertex|undefined = undefined; 
+
+        this.vertices.forEach((v) => {
+            if (v.label == label) result = v;
         });
 
-
-
-
-        return path; 
+        return result; 
     }
 
     getAllVertices(): Vertex[] 
@@ -291,6 +362,11 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         this.getAllEdges(); // updates the this.edges array
     }
 
+    /**
+     * 
+     * @param edges list of edges to be sorted
+     * @returns a new list of sorted edges
+     */
     sortEdgesASC(edges : Edge[]) : Edge[] 
     {
         var sortedArray : Edge[] = [];
@@ -305,9 +381,14 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
                 return -1; 
 
             return 0; 
-        })
+        });
     }
 
+    /**
+     * 
+     * @param edges list of edges to be sorted
+     * @returns a new list of sorted edges
+     */
     sortEdgesDESC(edges : Edge[]) : Edge[] 
     {
         var sortedArray : Edge[] = [];
@@ -322,6 +403,6 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
                 return -1; 
 
             return 0; 
-        })
+        });
     }
 }
