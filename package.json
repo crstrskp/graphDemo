@@ -1,6 +1,6 @@
 {
-   "name": "mrSlave",
-   "author": "Treehorn Trading Operate A/S",
+   "name": "graphDemo",
+   "author": "Jesper Tjørnelund",
    "version": "0.1.2",
    "main": "./bin/Run.js",
    "dependencies": {

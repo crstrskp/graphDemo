@@ -9,6 +9,6 @@
 
 # Visual Studio cache directory
 .vs/
-mrSlave
-mrSlave.pub
+graphDemo
+graphDemo.pub
 .vscode/settings.json
