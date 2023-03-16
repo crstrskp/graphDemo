@@ -1,18 +1,39 @@
 {
-   "name": "graphDemo",
-   "author": "Jesper Tjørnelund",
-   "version": "0.1.2",
-   "main": "./bin/Run.js",
-   "dependencies": {
-      "@babel/preset-env": "^7.18.9",
-      "@babel/preset-typescript": "^7.18.6",
-      "@types/jest": "^28.1.6",
-      "babel-jest": "^28.1.3",
-      "jest": "^28.1.3",
-      "ts-jest": "^28.0.7",
-      "typescript": "^4.5.4"
-   },
-   "scripts": {
-      "test": "jest"
-   }
+  "name": "@crstrskp/graph",
+  "author": "Jesper Tjørnelund",
+  "version": "0.1.3",
+  "main": "./bin/Run.js",
+  "dependencies": {
+    "@babel/preset-env": "^7.18.9",
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/jest": "^28.1.6",
+    "babel-jest": "^28.1.3",
+    "jest": "^28.1.3",
+    "ts-jest": "^28.0.7",
+    "typescript": "^4.5.4"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "bin": {
+    "graph": "bin/babel.config.js"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crstrskp/graphDemo.git"
+  },
+  "keywords": [
+    "graph",
+    "typescript"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crstrskp/graphDemo/issues"
+  },
+  "homepage": "https://github.com/crstrskp/graphDemo#readme",
+  "description": ""
 }
