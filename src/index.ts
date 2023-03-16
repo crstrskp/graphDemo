@@ -10,12 +10,3 @@ export * from "./Edge";
 export * from "./Path";
 export * from "./Utilities";
 
-
-// const main = async () => 
-// {
-// }
-
-// main().then(() => 
-// {
-//     console.log("Main done");
-// });
