@@ -4,11 +4,18 @@ import { Edge } from "./Edge";
 import { GraphImpl } from "./GraphImpl";
 
 
-const main = async () => 
-{
-}
+export * from "./GraphImpl";
+export * from "./Vertex";
+export * from "./Edge";
+export * from "./Path";
+export * from "./Utilities";
 
-main().then(() => 
-{
-    console.log("Main done");
-});
+
+// const main = async () => 
+// {
+// }
+
+// main().then(() => 
+// {
+//     console.log("Main done");
+// });
