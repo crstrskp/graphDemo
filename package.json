@@ -1,8 +1,8 @@
 {
   "name": "@crstrskp/graph",
   "author": "Jesper Tjørnelund",
-  "version": "0.1.6",
-  "main": "./bin/src/index.js",
+  "version": "0.1.7",
+  "main": "./bin/src/index",
   "types": "./bin/src/index.d.ts",
   "files:": [
     "bin/src"
