@@ -1,11 +1,11 @@
 {
   "name": "@crstrskp/graph",
   "author": "Jesper Tjørnelund",
-  "version": "0.1.9",
-  "main": "./bin/src/Graph",
+  "version": "0.1.91",
+  "main": "./src/Graph",
   "types": "./src/Graph.d.ts",
   "files:": [
-    "bin/src"
+    "src"
   ],
   "dependencies": {
     "@babel/preset-env": "^7.18.9",
