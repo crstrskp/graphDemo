@@ -15,7 +15,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         this.vertices = [];
     }
 
-    bellmanFord(src : Vertex) {
+    public bellmanFord(src : Vertex) {
         var vDists = new Map<Vertex, number>();
         
         this.vertices.forEach((v) => {
@@ -47,7 +47,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return vDists;
     }
 
-    bellmanFord_shortestPath(src : Vertex, dest : Vertex) : Path
+    public bellmanFord_shortestPath(src : Vertex, dest : Vertex) : Path
     {
         var path = new Path(); 
         path.addStep(dest);
@@ -68,7 +68,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return path; 
     }
 
-    bmf_print(bmf: Map<Vertex, number>) 
+    public bmf_print(bmf: Map<Vertex, number>) 
     {
         var output = "Node\tDistance from source\n";
 
@@ -80,7 +80,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         console.log(output);
     }
 
-    bmf_negativeCycles() 
+    public bmf_negativeCycles() 
     {
         var path = new Path();
         
@@ -107,7 +107,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return cycles;
     }
     
-    dijkstra_shortestPath(src: Vertex, dest: Vertex) : Path 
+    public dijkstra_shortestPath(src: Vertex, dest: Vertex) : Path 
     {
         var path = new Path(); 
         
@@ -179,7 +179,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return path;
     }
     
-    getVertexByLabel(label: string) : Vertex | undefined
+    public getVertexByLabel(label: string) : Vertex | undefined
     {
         var result : Vertex|undefined = undefined; 
 
@@ -190,7 +190,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return result; 
     }
 
-    getAllVertices(): Vertex[] 
+    public getAllVertices(): Vertex[] 
     { 
         var vertices : Vertex[] = [];
         for (var i = 0; i < this.vertices.length; i++) 
@@ -206,7 +206,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return this.vertices; 
     }
     
-    getAllEdges(): Edge[] 
+    public getAllEdges(): Edge[] 
     { 
         var edges : Edge[] = [];
         for (var i = 0; i < this.edges.length; i++)
@@ -222,7 +222,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return this.edges;
     }
     
-    getIncidentEdges(v: Vertex): Edge[]
+    public getIncidentEdges(v: Vertex): Edge[]
     {
         var incidentEdges : Edge[] = [];
 
@@ -235,7 +235,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return incidentEdges;
     }
 
-    getIncidentStartEdges(v: Vertex): Edge[] 
+    public getIncidentStartEdges(v: Vertex): Edge[] 
     {
         var incidentEdges : Edge[] = [];
 
@@ -248,7 +248,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return incidentEdges;    
     }
 
-    getIncidentEndEdges(v: Vertex): Edge[] 
+    public getIncidentEndEdges(v: Vertex): Edge[] 
     {
         var incidentEdges : Edge[] = [];
 
@@ -261,14 +261,14 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return incidentEdges;
     }
 
-    getOpposite(v: Vertex, e: Edge): Vertex | undefined 
+    public getOpposite(v: Vertex, e: Edge): Vertex | undefined 
     {
         if (e.start === v) return e.end;
         else if (e.end === v) return e.start;
         else return undefined;
     }
 
-    getVertices(e: Edge): Vertex[] 
+    public getVertices(e: Edge): Vertex[] 
     {
         var vertices : Vertex[] = [];
 
@@ -278,7 +278,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return vertices; 
     }
 
-    getAdjacentVertices(v: Vertex): Vertex[] 
+    public getAdjacentVertices(v: Vertex): Vertex[] 
     {
         var edges = this.getIncidentEdges(v);
         var neighbors : Vertex[] = []; 
@@ -293,7 +293,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return neighbors;
     }
 
-    areAdjacent(v: Vertex, w: Vertex): boolean 
+    public areAdjacent(v: Vertex, w: Vertex): boolean 
     {
         var adj = false;
 
@@ -308,7 +308,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return adj; 
     }
 
-    insertVertex(o: any): Vertex 
+    public insertVertex(o: any): Vertex 
     {
         if (this.isOfTypeVertex(o))
         {
@@ -323,12 +323,12 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         }
     }
 
-    isOfTypeVertex(input: any): boolean
+    public isOfTypeVertex(input: any): boolean
     {
         return input instanceof Vertex;
     }
     
-    insertEdge(v: Vertex, w: Vertex, o: any): Edge 
+    public insertEdge(v: Vertex, w: Vertex, o: any): Edge 
     {
         var e = new Edge(v, w);
         if (Number.isFinite(o))
@@ -340,7 +340,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return e; 
     }
 
-    removeVertex(v: Vertex)
+    public removeVertex(v: Vertex)
     {
         var edges = this.getIncidentEdges(v);
         for (var i = 0; i < edges.length; i++)
@@ -352,7 +352,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         var removedElement = this.vertices.splice(i, 1);
     }
 
-    removeEdge(e: Edge) 
+    public removeEdge(e: Edge) 
     {
         for (var i = 0; i < this.edges.length; i++)
         {
@@ -367,7 +367,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
      * @param edges list of edges to be sorted
      * @returns a new list of sorted edges
      */
-    sortEdgesASC(edges : Edge[]) : Edge[] 
+    public sortEdgesASC(edges : Edge[]) : Edge[] 
     {
         var sortedArray : Edge[] = [];
         edges.forEach((e) => sortedArray.push(e));
@@ -389,7 +389,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
      * @param edges list of edges to be sorted
      * @returns a new list of sorted edges
      */
-    sortEdgesDESC(edges : Edge[]) : Edge[] 
+    public sortEdgesDESC(edges : Edge[]) : Edge[] 
     {
         var sortedArray : Edge[] = [];
         edges.forEach((e) => sortedArray.push(e));
