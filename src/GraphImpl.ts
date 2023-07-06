@@ -334,6 +334,8 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         if (Number.isFinite(o))
         {
             e.setCost(o);
+        } else {
+            e.obj = o;
         }
 
         this.edges.push(e);
