@@ -1,7 +1,7 @@
 {
   "name": "@crstrskp/graph",
   "author": "Jesper Tjørnelund",
-  "version": "0.1.92",
+  "version": "0.1.93",
   "main": "./src/Graph",
   "types": "./src/Graph.d.ts",
   "files:": [
