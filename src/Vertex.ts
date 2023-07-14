@@ -20,11 +20,7 @@ export class Vertex implements IVertex
     }
 
     public updateCost() {
-        // find pool
-        // update price ^^ 
-            //timedAwait ?? this.object.UpdatePrice();
-        // set cost to price ^^ 
-            //this.cost = this.
+  
     }
 
     public setCost(cost : number) { this.cost = cost; }
