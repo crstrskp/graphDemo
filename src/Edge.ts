@@ -34,4 +34,9 @@ export class Edge
     public getPrev() { return this.prev; }
 
     public setPrev(p : Vertex) { this.prev = p; }
+
+    public getObj() : any { return this.obj; }
+
+    public setObj(obj : any) { this.obj = obj; }
+
 }

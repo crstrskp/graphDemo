@@ -317,6 +317,17 @@ describe('IGraph_testSuite', () =>
         expect(allEdges[1]).toBe(e2_1);
     });
 
+    test('graph_insertEdgeWithObjects', () => {
+        var graph = new GraphImpl(); 
+
+        var v1 = graph.insertVertex("v1");
+        var v2 = graph.insertVertex("v2");
+        var e1_2 = graph.insertEdge(v1, v2, "e1_2");
+
+        expect(e1_2.obj).toEqual("e1_2");
+
+    });
+
     test('graph_removeVertex', () => {
         var graph = new GraphImpl(); 
 
