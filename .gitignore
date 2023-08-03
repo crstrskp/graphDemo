@@ -2,6 +2,7 @@
 /node_modules/
 /[Ll]og/
 /[Ll]ogs/
+/coverage/
 
 *.lock
 *.env
