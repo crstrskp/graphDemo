@@ -171,4 +171,31 @@ describe('Path_testSuite', () =>
             expect(step?.label).toBe(A.label);
 
     });
+
+    test('iterator', () => {
+        var graph = new GraphImpl();
+
+        var v1 = graph.insertVertex("v1");
+        var v2 = graph.insertVertex("v2");
+        var v3 = graph.insertVertex("v3");
+        var v4 = graph.insertVertex("v4");
+
+        var e1 = graph.insertEdge(v1, v2, 1);
+        var e2 = graph.insertEdge(v2, v3, 2);
+        var e3 = graph.insertEdge(v3, v4, 3);
+
+        var path = graph.dijkstra_shortestPath(v1, v4);
+
+        var result = 0;
+
+        for (const step of path.steps) 
+        {
+            if (step instanceof Edge)
+            {
+                result += step.getCost();   
+            }
+        }
+
+        expect(result).toBe(6);
+    })
 });
