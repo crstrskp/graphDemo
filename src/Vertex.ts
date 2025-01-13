@@ -3,18 +3,29 @@ import { IVertex } from "./IVertex";
 
 export class Vertex implements IVertex
 {
-    label : string; 
-    visited : boolean;  // used for iterating via search algorithms
-    cost : number;      
-    object : any; 
-    prev : Edge | undefined;
-    
+    label       : string; 
+    id          : number; 
+    visited     : boolean;  // used for iterating via search algorithms
+    cost        : number;      
+    object      : any; 
+    prev        : Edge | undefined;
+
+    private static idCounter : number = 1;
 
     public setLabel(s : string) { this.label = s; }
     public getLabel() { return this.label; }
 
-    constructor(label : string) {
-        this.label = label; 
+    constructor(input : any) {
+        this.id = Vertex.idCounter++;
+        
+        if (typeof input === 'string') {
+            this.label = input;
+        }
+        else {
+            this.object = input;
+            this.label = "Vertex " + this.id;
+        }
+
         this.visited = false; 
         this.cost = 0;
     }
@@ -33,4 +44,5 @@ export class Vertex implements IVertex
 
     public setPrev(e : Edge) { this.prev = e; }
 
+    public getId() { return this.id; }
 }

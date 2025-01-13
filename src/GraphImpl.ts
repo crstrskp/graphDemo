@@ -190,6 +190,11 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return result; 
     }
 
+    public getVertexById(id: number) : Vertex | undefined
+    {
+        return this.vertices.find(vertex => vertex.getId() === id);
+    }
+
     public getAllVertices(): Vertex[] 
     { 
         var vertices : Vertex[] = [];
@@ -407,4 +412,6 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
             return 0; 
         });
     }
+
 }
+

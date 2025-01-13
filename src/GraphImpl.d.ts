@@ -14,6 +14,7 @@ export declare class GraphImpl implements IGraph, IGraphSearch, IPathBuilder {
     bmf_negativeCycles(): Path[];
     dijkstra_shortestPath(src: Vertex, dest: Vertex): Path;
     getVertexByLabel(label: string): Vertex | undefined;
+    getVertexById(id: number): Vertex | undefined;
     getAllVertices(): Vertex[];
     getAllEdges(): Edge[];
     getIncidentEdges(v: Vertex): Edge[];

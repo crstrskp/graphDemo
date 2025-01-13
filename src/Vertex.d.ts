@@ -6,6 +6,7 @@ export declare class Vertex implements IVertex {
     cost: number;
     object: any;
     prev: Edge | undefined;
+    id: number;
     setLabel(s: string): void;
     getLabel(): string;
     constructor(label: string);
@@ -15,4 +16,5 @@ export declare class Vertex implements IVertex {
     getObject(): any;
     getPrev(): Edge;
     setPrev(e: Edge): void;
+    getId(): number;
 }

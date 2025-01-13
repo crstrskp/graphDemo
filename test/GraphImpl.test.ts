@@ -483,6 +483,20 @@ describe('IGraph_testSuite', () =>
         expect(graph.getVertexByLabel("v0")).toBe(v0);
         expect(graph.getVertexByLabel(v1.label)).toBe(v1);
     });
+
+    test('getVertexById', () =>
+    {
+        var graph = new GraphImpl();
+
+        const actual_v0 = graph.insertVertex("v0");
+        const actual_v1 = graph.insertVertex("v1");
+
+        var expected_v0 = graph.getVertexById(actual_v0.id);
+        var expected_v1 = graph.getVertexById(actual_v1.id);
+
+        expect(expected_v0).toBe(actual_v0);
+        expect(expected_v1).toBe(actual_v1);
+    });
 });
 
 describe('IGraphSearch_testSuite', () => 

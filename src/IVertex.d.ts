@@ -4,4 +4,5 @@ export interface IVertex {
     updateCost(): any;
     getCost(): number;
     getObject(): any;
+    getId(): number;
 }
