@@ -210,6 +210,10 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
 
         return this.vertices; 
     }
+
+    getEdgeById(id: number): Edge | undefined {
+        return this.edges.find(edge => edge.id === id);
+    }
     
     public getAllEdges(): Edge[] 
     { 

@@ -34,6 +34,21 @@ describe('IGraph_testSuite', () =>
         expect(allVertices.length).toEqual(count);
     });
 
+    test('graph_getEdgeById', () => 
+    {
+        var graph = new GraphImpl(); 
+
+        var v1 = graph.insertVertex("v1");
+        var v2 = graph.insertVertex("v2");
+        var v3 = graph.insertVertex("v3");
+
+        var e1_2 = graph.insertEdge(v1, v2, "e1_2");
+        var e2_3 = graph.insertEdge(v2, v3, "e2_3");
+
+        expect(graph.getEdgeById(e1_2.id)).toBe(e1_2);
+        expect(graph.getEdgeById(e2_3.id)).toBe(e2_3);
+    });
+
     test('graph_getEdges', () => 
     {
         var graph = new GraphImpl(); 

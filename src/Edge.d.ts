@@ -2,6 +2,7 @@ import { Vertex } from "./Vertex";
 export declare class Edge {
     start: Vertex;
     end: Vertex;
+    id: number;
     obj: any;
     cost: number;
     prev: Vertex | undefined;

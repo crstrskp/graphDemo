@@ -120,6 +120,11 @@ export interface IGraph
      */
     getVertexById(id : number) : Vertex | undefined;
     
+    /**
+     * Return the edge with the given id. 
+     * @param id The id of the edge. 
+     */
+    getEdgeById(id : number) : Edge | undefined;
     
 }
 

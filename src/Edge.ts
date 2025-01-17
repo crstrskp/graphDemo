@@ -4,17 +4,17 @@ export class Edge
 {
     start : Vertex; 
     end : Vertex; 
+    id : number; 
     obj : any;
 
     cost : number; 
     prev : Vertex | undefined;
-    /**
-     *
-     */
+
+    static idCounter = 0; 
     constructor(start : Vertex, end : Vertex) {
         this.start = start; 
         this.end = end; 
-
+        this.id = Edge.idCounter++;
         this.cost = -1;
     }
 
