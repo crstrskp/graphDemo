@@ -14,4 +14,8 @@ export declare class Edge {
     setCost(cost: number): void;
     getPrev(): Vertex;
     setPrev(p: Vertex): void;
+    getObj(): any;
+    setObj(obj: any): void;
+    getId(): number;
+    
 }

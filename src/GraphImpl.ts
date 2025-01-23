@@ -212,7 +212,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
     }
 
     getEdgeById(id: number): Edge | undefined {
-        return this.edges.find(edge => edge.id === id);
+        return this.edges.find(edge => edge.getId() === id);
     }
     
     public getAllEdges(): Edge[] 

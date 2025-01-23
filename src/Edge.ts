@@ -2,19 +2,19 @@ import { Vertex } from "./Vertex";
 
 export class Edge
 {
-    start : Vertex; 
-    end : Vertex; 
-    id : number; 
-    obj : any;
+    start   : Vertex; 
+    end     : Vertex; 
+    id      : number; 
+    obj     : any;
+    cost    : number; 
+    prev    : Vertex | undefined;
 
-    cost : number; 
-    prev : Vertex | undefined;
+    private static idCounter = 0; 
 
-    static idCounter = 0; 
     constructor(start : Vertex, end : Vertex) {
+        this.id = Edge.idCounter++;
         this.start = start; 
         this.end = end; 
-        this.id = Edge.idCounter++;
         this.cost = -1;
     }
 
@@ -38,5 +38,7 @@ export class Edge
     public getObj() : any { return this.obj; }
 
     public setObj(obj : any) { this.obj = obj; }
+
+    public getId() { return this.id; }
 
 }
