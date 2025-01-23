@@ -15,6 +15,12 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         this.vertices = [];
     }
 
+    private static idCounter = 0; 
+    public static generateId() : number
+    {
+        return this.idCounter++; 
+    }
+
     public bellmanFord(src : Vertex) {
         var vDists = new Map<Vertex, number>();
         

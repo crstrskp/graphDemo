@@ -1,4 +1,5 @@
 import { Edge } from "./Edge";
+import { GraphImpl } from "./GraphImpl";
 import { IVertex } from "./IVertex";
 
 export class Vertex implements IVertex
@@ -10,13 +11,13 @@ export class Vertex implements IVertex
     object      : any; 
     prev        : Edge | undefined;
 
-    private static idCounter : number = 1;
+    
 
     public setLabel(s : string) { this.label = s; }
     public getLabel() { return this.label; }
 
     constructor(input : any) {
-        this.id = Vertex.idCounter++;
+        this.id = GraphImpl.generateId();
         
         if (typeof input === 'string') {
             this.label = input;

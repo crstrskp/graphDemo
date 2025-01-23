@@ -1,3 +1,4 @@
+import { GraphImpl } from "./GraphImpl";
 import { Vertex } from "./Vertex";
 
 export class Edge
@@ -9,10 +10,9 @@ export class Edge
     cost    : number; 
     prev    : Vertex | undefined;
 
-    private static idCounter = 0; 
 
     constructor(start : Vertex, end : Vertex) {
-        this.id = Edge.idCounter++;
+        this.id = GraphImpl.generateId();
         this.start = start; 
         this.end = end; 
         this.cost = -1;
