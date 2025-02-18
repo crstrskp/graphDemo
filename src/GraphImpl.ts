@@ -343,6 +343,12 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return input instanceof Vertex;
     }
     
+    /**
+     * @param v source vertex
+     * @param w destination vertex
+     * @param o edge object. If a number is passed, it will be set as the cost of the edge.
+     * @returns the inserted edge. 
+     */
     public insertEdge(v: Vertex, w: Vertex, o: any): Edge 
     {
         var e = new Edge(v, w);
@@ -423,5 +429,33 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         });
     }
 
+    /**
+     * 
+     * @param subgraph The graph to be appended
+     * @param subRoot The node of the subgraph that is to be connected to the target node
+     * @param parentNode The target node of the main graph to which the subgraph is to be appended
+     * @param obj (OPTIONAL) The object to be added to the edge connecting the subRoot to the target node
+     */
+    public append(subgraph: GraphImpl, subRoot: Vertex, parentNode: Vertex, obj : any = undefined) 
+    {
+        // start by adding all vertices from the subgraph to the main graph
+        subgraph.vertices.forEach((v) => {
+            this.vertices.push(v);
+        });
+
+        // add all edges
+        subgraph.edges.forEach((e) => {
+            this.edges.push(e);
+        });
+
+        // connect the subRoot to the parentNode node
+        this.insertEdge(parentNode, subRoot, obj); 
+
+
+
+        // return the main graph
+        return this;
+        
+    }
 }
 

@@ -802,4 +802,34 @@ describe('IGraphSearch_testSuite', () =>
         expect(dijkstra.getTotalCost()).toEqual(280);
 
     });
+
+    test('append_subgraph_to_graph', () => 
+    {
+        var graph = new GraphImpl(); 
+
+        var A = graph.insertVertex("a");
+        var B = graph.insertVertex("b");
+        var E = graph.insertVertex("e");
+
+        var eA_B = graph.insertEdge(A, B, 8.7);
+        var eA_E = graph.insertEdge(A, E, 3.8);
+
+        var subgraph = new GraphImpl();
+
+        var C = subgraph.insertVertex("c");
+        var D = subgraph.insertVertex("d");
+
+        var eC_D = subgraph.insertEdge(C, D, 2.1);
+
+        graph.append(subgraph, C, B, 6.66); // append subgraph to graph, connecting C to B.
+
+        var allVertices = graph.getAllVertices();
+        expect(allVertices.length).toEqual(5);
+
+        var allEdges = graph.getAllEdges();
+        expect(allEdges.length).toEqual(4);
+
+        var edgesConnectedToC = graph.getIncidentEdges(C);
+        expect(edgesConnectedToC.length).toEqual(2); // B and D
+    });
 });
