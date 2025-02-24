@@ -441,21 +441,20 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         // start by adding all vertices from the subgraph to the main graph
         subgraph.vertices.forEach((v) => {
             this.vertices.push(v);
+            v.id = GraphImpl.generateId();
         });
 
         // add all edges
         subgraph.edges.forEach((e) => {
             this.edges.push(e);
+            e.id = GraphImpl.generateId();
         });
 
         // connect the subRoot to the parentNode node
         this.insertEdge(parentNode, subRoot, obj); 
-
-
 
         // return the main graph
         return this;
         
     }
 }
-
