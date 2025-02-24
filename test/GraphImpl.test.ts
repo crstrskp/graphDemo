@@ -832,4 +832,33 @@ describe('IGraphSearch_testSuite', () =>
         var edgesConnectedToC = graph.getIncidentEdges(C);
         expect(edgesConnectedToC.length).toEqual(2); // B and D
     });
+
+    test('append_subgraph_to_graph_correct_ids', () => 
+    {
+        var graph = new GraphImpl(); 
+
+        var A = graph.insertVertex("a");
+        var B = graph.insertVertex("b");
+        var E = graph.insertVertex("e");
+
+        var eA_B = graph.insertEdge(A, B, 8.7);
+        var eA_E = graph.insertEdge(A, E, 3.8);
+
+        var subgraph = new GraphImpl();
+
+        var C = subgraph.insertVertex("c");
+        var D = subgraph.insertVertex("d");
+
+        var eC_D = subgraph.insertEdge(C, D, 2.1);
+
+        const cId = C.id;
+
+        graph.append(subgraph, C, B, 6.66); // append subgraph to graph, connecting C to B.
+
+        var newC = graph.getVertexByLabel("c")!;
+
+        expect(newC).toBeDefined();
+
+        expect(newC.id).not.toEqual(cId);
+    });
 });
