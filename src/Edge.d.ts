@@ -4,6 +4,9 @@ export declare class Edge {
     end: Vertex;
     id: number;
     obj: any;
+    attributes: {
+        [key: string]: any;
+    };
     cost: number;
     prev: Vertex | undefined;
     /**
@@ -17,5 +20,6 @@ export declare class Edge {
     getObj(): any;
     setObj(obj: any): void;
     getId(): number;
-    
+    getAttribute(key: string): any;
+    setAttribute(key: string, value: any): void;
 }

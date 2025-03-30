@@ -5,16 +5,20 @@ export declare class Vertex implements IVertex {
     visited: boolean;
     cost: number;
     object: any;
+    attributes: {
+        [key: string]: any;
+    };
     prev: Edge | undefined;
     id: number;
     setLabel(s: string): void;
     getLabel(): string;
     constructor(label: string);
-    updateCost(): void;
     setCost(cost: number): void;
     getCost(): number;
     getObject(): any;
     getPrev(): Edge;
     setPrev(e: Edge): void;
     getId(): number;
+    setAttribute(key: string, value: any): void;
+    getAttribute(key: string): any;
 }

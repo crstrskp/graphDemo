@@ -861,4 +861,34 @@ describe('IGraphSearch_testSuite', () =>
 
         expect(newC.id).not.toEqual(cId);
     });
+
+    test('attributes_edge', () =>
+    {
+        var graph = new GraphImpl(); 
+
+        var v1 = graph.insertVertex("v1");
+        var v2 = graph.insertVertex("v2");
+
+        var e1_2 = graph.insertEdge(v1, v2, "e1_2");
+
+        expect(e1_2.getAttribute("test")).toBeUndefined();
+        
+        e1_2.setAttribute("test", 123);
+        
+        expect(e1_2.getAttribute("test")).toEqual(123);
+    });
+
+    test('attributes_vertex', () =>
+    {
+        var graph = new GraphImpl(); 
+
+        var v1 = graph.insertVertex("v1");
+        var v2 = graph.insertVertex("v2");
+
+        expect(v1.getAttribute("test")).toBeUndefined();
+        
+        v1.setAttribute("test", 123);
+        
+        expect(v1.getAttribute("test")).toEqual(123);
+    });
 });

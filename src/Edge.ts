@@ -1,14 +1,16 @@
 import { GraphImpl } from "./GraphImpl";
 import { Vertex } from "./Vertex";
+import { Attributes } from "./types/Attributes";
 
 export class Edge
 {
-    start   : Vertex; 
-    end     : Vertex; 
-    id      : number; 
-    obj     : any;
-    cost    : number; 
-    prev    : Vertex | undefined;
+    start       : Vertex; 
+    end         : Vertex; 
+    id          : number; 
+    obj         : any;
+    attributes  : Attributes;
+    cost        : number; 
+    prev        : Vertex | undefined;
 
 
     constructor(start : Vertex, end : Vertex) {
@@ -16,6 +18,7 @@ export class Edge
         this.start = start; 
         this.end = end; 
         this.cost = -1;
+        this.attributes = {};
     }
 
     getCost(): number {
@@ -41,4 +44,7 @@ export class Edge
 
     public getId() { return this.id; }
 
+    public setAttribute(key : string, value : any) { this.attributes[key] = value; }
+    
+    public getAttribute(key : string) { return this.attributes[key]; }
 }
