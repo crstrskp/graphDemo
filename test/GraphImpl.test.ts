@@ -906,4 +906,40 @@ describe('IGraphSearch_testSuite', () =>
         graph.setAttribute("root", node); 
         expect(graph.getAttribute("root")).toEqual(node);
     });
+
+    /***
+     * Not entirely sure if this is the desired behavior!
+     * Test serves as an attention to detail. 
+     */
+    test('attributes_on_subgraph_lost_when_appended', () =>
+    {
+        var graph = new GraphImpl(); 
+
+        var v1 = graph.insertVertex("v1");
+        var v2 = graph.insertVertex("v2");
+
+        var e1_2 = graph.insertEdge(v1, v2, "e1_2");
+
+        expect(e1_2.getAttribute("test")).toBeUndefined();
+        
+        e1_2.setAttribute("test", 123);
+        
+        expect(e1_2.getAttribute("test")).toEqual(123);
+
+        var subgraph = new GraphImpl();
+
+        var v3 = subgraph.insertVertex("v3");
+        var v4 = subgraph.insertVertex("v4");
+
+        expect(v3.getAttribute("test")).toBeUndefined();
+        
+        v3.setAttribute("test", 123);
+        subgraph.setAttribute("test", 123);
+        expect(v3.getAttribute("test")).toEqual(123);
+
+        graph.append(subgraph, v3, v2, 6.66); // append subgraph to graph, connecting C to B.
+
+        expect(v3.getAttribute("test")).toEqual(123);
+        expect(graph.getAttribute("test")).toBeUndefined();
+    });
 });
