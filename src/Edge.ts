@@ -7,7 +7,6 @@ export class Edge
     start       : Vertex; 
     end         : Vertex; 
     id          : number; 
-    obj         : any;
     attributes  : Attributes;
     cost        : number; 
     prev        : Vertex | undefined;
@@ -26,10 +25,8 @@ export class Edge
         {
             return this.cost;
         }
-        else
-        {
-            return this.obj.getCost();
-        }
+        
+        return NaN;
     }
 
     public setCost(cost : number) { this.cost = cost; }
@@ -37,10 +34,6 @@ export class Edge
     public getPrev() { return this.prev; }
 
     public setPrev(p : Vertex) { this.prev = p; }
-
-    public getObj() : any { return this.obj; }
-
-    public setObj(obj : any) { this.obj = obj; }
 
     public getId() { return this.id; }
 

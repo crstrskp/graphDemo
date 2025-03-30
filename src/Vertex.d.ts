@@ -4,7 +4,6 @@ export declare class Vertex implements IVertex {
     label: string;
     visited: boolean;
     cost: number;
-    object: any;
     attributes: {
         [key: string]: any;
     };
@@ -15,7 +14,6 @@ export declare class Vertex implements IVertex {
     constructor(label: string);
     setCost(cost: number): void;
     getCost(): number;
-    getObject(): any;
     getPrev(): Edge;
     setPrev(e: Edge): void;
     getId(): number;

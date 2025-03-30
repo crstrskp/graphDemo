@@ -346,7 +346,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
     /**
      * @param v source vertex
      * @param w destination vertex
-     * @param o edge object. If a number is passed, it will be set as the cost of the edge.
+     * @param o edge payload. If a number is passed, it will be set as the cost of the edge. Otherwise it can be found by in the attributes with key "payload".
      * @returns the inserted edge. 
      */
     public insertEdge(v: Vertex, w: Vertex, o: any): Edge 
@@ -356,7 +356,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         {
             e.setCost(o);
         } else {
-            e.obj = o;
+            e.setAttribute("payload", o);
         }
 
         this.edges.push(e);

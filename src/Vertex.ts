@@ -9,7 +9,6 @@ export class Vertex implements IVertex
     id          : number; 
     visited     : boolean;  // used for iterating via search algorithms
     cost        : number;      
-    object      : any; 
     attributes  : Attributes;
     prev        : Edge | undefined;
 
@@ -18,18 +17,17 @@ export class Vertex implements IVertex
     public setLabel(s : string) { this.label = s; }
     public getLabel() { return this.label; }
 
-    constructor(input : any) {
+    constructor(payload : any) {
         this.id = GraphImpl.generateId();
-        
-        if (typeof input === 'string') {
-            this.label = input;
+        this.attributes = {};
+
+        if (typeof payload === 'string') {
+            this.label = payload;
         }
         else {
-            this.object = input;
+            this.setAttribute("payload", payload);
             this.label = "Vertex " + this.id;
         }
-
-        this.attributes = {};
 
         this.visited = false; 
         this.cost = 0;
@@ -39,8 +37,6 @@ export class Vertex implements IVertex
 
     public getCost() { return this.cost; }
 
-    public getObject() { return this.object; }
-    
     public getPrev() { return this.prev; }
 
     public setPrev(e : Edge) { this.prev = e; }
