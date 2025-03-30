@@ -891,4 +891,19 @@ describe('IGraphSearch_testSuite', () =>
         
         expect(v1.getAttribute("test")).toEqual(123);
     });
+
+    test('attributes_graph', () =>
+    {
+        var graph = new GraphImpl(); 
+
+        expect(graph.getAttribute("test")).toBeUndefined();
+        
+        graph.setAttribute("test", 123);
+        
+        expect(graph.getAttribute("test")).toEqual(123);
+
+        const node = graph.insertVertex("v1");
+        graph.setAttribute("root", node); 
+        expect(graph.getAttribute("root")).toEqual(node);
+    });
 });

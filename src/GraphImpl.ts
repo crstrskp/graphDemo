@@ -4,15 +4,19 @@ import { Vertex } from './Vertex';
 import { IGraphSearch } from "./IGraphSearch";
 import { Path } from "./Path";
 import { IPathBuilder } from './IPathBuilder';
+import { Attributes } from "./types/Attributes";
+
 
 export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
 {
     edges : Edge[];
     vertices : Vertex[];
-    
+    attributes  : Attributes;
+        
     constructor() {
         this.edges = [];
         this.vertices = [];
+        this.attributes = {};
     }
 
     private static idCounter = 0; 
@@ -185,6 +189,10 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         return path;
     }
     
+    public setAttribute(key : string, value : any) { this.attributes[key] = value; }
+    
+    public getAttribute(key : string) { return this.attributes[key]; }
+
     public getVertexByLabel(label: string) : Vertex | undefined
     {
         var result : Vertex|undefined = undefined; 

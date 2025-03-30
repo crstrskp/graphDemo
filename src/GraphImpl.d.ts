@@ -7,12 +7,18 @@ import { IPathBuilder } from './IPathBuilder';
 export declare class GraphImpl implements IGraph, IGraphSearch, IPathBuilder {
     edges: Edge[];
     vertices: Vertex[];
+    attributes: {
+        [key: string]: any;
+    };
     constructor();
+    getEdgeById(id: number): Edge | undefined;
     bellmanFord(src: Vertex): Map<Vertex, number>;
     bellmanFord_shortestPath(src: Vertex, dest: Vertex): Path;
     bmf_print(bmf: Map<Vertex, number>): void;
     bmf_negativeCycles(): Path[];
     dijkstra_shortestPath(src: Vertex, dest: Vertex): Path;
+    getAttribute(key: string): any;
+    setAttribute(key: string, value: any): void;
     getVertexByLabel(label: string): Vertex | undefined;
     getVertexById(id: number): Vertex | undefined;
     getAllVertices(): Vertex[];

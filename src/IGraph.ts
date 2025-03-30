@@ -1,11 +1,12 @@
 import { Edge } from "./Edge";
+import { Attributes } from "./types/Attributes";
 import { Vertex } from "./Vertex";
 
 export interface IGraph
 {
     edges : Edge[];
     vertices : Vertex[];
-
+    attributes : Attributes;
     /**
      * return an array of all the vertices of the graph.
      * @Input: None; @Output: array of vertices
