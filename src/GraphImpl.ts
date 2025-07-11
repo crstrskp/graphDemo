@@ -4,15 +4,18 @@ import { Vertex } from './Vertex';
 import { IGraphSearch } from "./IGraphSearch";
 import { Path } from "./Path";
 import { IPathBuilder } from './IPathBuilder';
+import { PriorityQueue } from './PriorityQueue';
 
 export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
 {
     edges : Edge[];
     vertices : Vertex[];
+    private vertexMap : Map<string, Vertex>;
     
     constructor() {
         this.edges = [];
         this.vertices = [];
+        this.vertexMap = new Map<string, Vertex>();
     }
 
     public bellmanFord(src : Vertex) {
@@ -33,11 +36,12 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
                 var end     = this.edges[j].end;
                 var cost    = this.edges[j].getCost();
 
-                var startCost = vDists.get(start); 
+                var startCost = vDists.get(start)!; 
+                var newCost = startCost + cost;
               
-                if (startCost! + cost < vDists.get(end)!)
+                if (newCost < vDists.get(end)!)
                 {
-                    vDists.set(end, startCost! + cost);
+                    vDists.set(end, newCost);
                     end.prev = this.edges[j];
                     this.edges[j].prev = start; 
                 }
@@ -82,8 +86,6 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
 
     public bmf_negativeCycles() 
     {
-        var path = new Path();
-        
         var cycles : Path[] = [];
 
         var vDists = this.bellmanFord(this.vertices[0]);
@@ -97,14 +99,60 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
             var c = vDists.get(start)! + cost;
             if (c < vDists.get(end)!)
             {
-                // console.log("Negative cycle detected at ", start.getLabel(), " -> ", end.getLabel());
-                path.addStep(start);
-                cycles.push(path);
-                console.log("TODO - return actual path rather than just start node. ");
+                // Found a negative cycle - construct the full cycle path
+                var cycle = this.extractNegativeCycle(end);
+                if (cycle && cycle.steps.length > 0) {
+                    cycles.push(cycle);
+                }
             }
         }
 
         return cycles;
+    }
+
+    private extractNegativeCycle(startVertex: Vertex): Path | null {
+        var cycle = new Path();
+        var current: Vertex | Edge | undefined = startVertex;
+
+        // Walk backward V steps to ensure we're in the cycle
+        for (var i = 0; i < this.vertices.length; i++) {
+            if (!current) break;
+            current = current.getPrev();
+        }
+
+        if (!current || !(current instanceof Vertex)) return null;
+
+        // Now extract the actual cycle by following predecessors until we loop back
+        var cycleStart = current;
+        var pathSteps: (Vertex | Edge)[] = [];
+        var visited = new Set<string>();
+
+        do {
+            if (current instanceof Vertex) {
+                if (visited.has(current.label)) {
+                    // Found the start of the cycle, break
+                    break;
+                }
+                visited.add(current.label);
+                pathSteps.push(current);
+                
+                if (current.prev) {
+                    pathSteps.push(current.prev);
+                    current = current.prev.start;
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+        } while (current && pathSteps.length < this.vertices.length * 3);
+
+        // Add the cycle back to the path in correct order
+        for (var i = pathSteps.length - 1; i >= 0; i--) {
+            cycle.addStep(pathSteps[i]);
+        }
+
+        return cycle.steps.length > 0 ? cycle : null;
     }
     
     public dijkstra_shortestPath(src: Vertex, dest: Vertex) : Path 
@@ -112,45 +160,39 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         var path = new Path(); 
         
         var vDists = new Map<string, number>();
+        var visited = new Set<string>();
+        var pq = new PriorityQueue<Vertex>();
 
         this.vertices.forEach((v) => {
             vDists.set(v.label, Number.MAX_VALUE);
         });
 
         vDists.set(src.label, 0);
-        var unvisitedEdges = this.getIncidentStartEdges(src);
-        unvisitedEdges = this.sortEdgesASC(unvisitedEdges);
-        unvisitedEdges.forEach((e) => e.prev = src);
+        pq.enqueue(src, 0);
         
-        while(unvisitedEdges.length > 0)
+        while(!pq.isEmpty())
         {
-            var currentCost = vDists.get(unvisitedEdges[0].start?.label)! + unvisitedEdges[0].cost;
-            // console.log("currentEdge: ",unvisitedEdges[0].start?.label+"->"+unvisitedEdges[0].end?.label, "nodeCost: ", vDists.get(unvisitedEdges[0].start?.label)!, "currentCost: ", currentCost);
-         
-            if (currentCost < vDists.get(unvisitedEdges[0].end.label)!)
-            {
-                vDists.set(unvisitedEdges[0].end.label, currentCost)
+            var currentVertex = pq.dequeue()!;
+            
+            if (visited.has(currentVertex.label)) continue;
+            visited.add(currentVertex.label);
+            
+            if (currentVertex === dest) break;
+            
+            var incidentEdges = this.getIncidentStartEdges(currentVertex);
+            
+            incidentEdges.forEach((edge) => {
+                var neighbor = edge.end;
+                var currentCost = vDists.get(currentVertex.label)!;
+                var newCost = currentCost + edge.getCost();
                 
-                var node = this.getVertexByLabel(unvisitedEdges[0].end.label);
-                if (node == undefined) continue; // end of the line? 
-                
-                // console.log(node.label);
-                node.prev = unvisitedEdges[0];
-                
-                var newEdges = this.getIncidentStartEdges(node);
-                newEdges.forEach((e) => {
-                    e.prev = node;
-                    // console.log("added new edge from: ", e.start.label, " to ", e.end.label);
-                    unvisitedEdges.push(e)
-                });
-            } 
-
-            // prepare for next iteration: 
-            unvisitedEdges.shift();
-            unvisitedEdges = this.sortEdgesASC(unvisitedEdges);
-
-            // early termination
-            if (unvisitedEdges[0] == undefined) continue; 
+                if (newCost < vDists.get(neighbor.label)!) {
+                    vDists.set(neighbor.label, newCost);
+                    neighbor.prev = edge;
+                    edge.prev = currentVertex;
+                    pq.enqueue(neighbor, newCost);
+                }
+            });
         }
 
         if (dest.prev == undefined) 
@@ -181,13 +223,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
     
     public getVertexByLabel(label: string) : Vertex | undefined
     {
-        var result : Vertex|undefined = undefined; 
-
-        this.vertices.forEach((v) => {
-            if (v.label == label) result = v;
-        });
-
-        return result; 
+        return this.vertexMap.get(label);
     }
 
     public getAllVertices(): Vertex[] 
@@ -313,12 +349,14 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
         if (this.isOfTypeVertex(o))
         {
             this.vertices.push(o);
+            this.vertexMap.set(o.label, o);
             return o;
         }
         else
         {
             var v = new Vertex(o);
             this.vertices.push(v);
+            this.vertexMap.set(v.label, v);
             return v;
         }
     }
@@ -352,6 +390,7 @@ export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
 
         var i = this.vertices.indexOf(v);
         var removedElement = this.vertices.splice(i, 1);
+        this.vertexMap.delete(v.label);
     }
 
     public removeEdge(e: Edge) 
