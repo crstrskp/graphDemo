@@ -23,7 +23,9 @@ export class Vertex implements IVertex
   
     }
 
-    public setCost(cost : number) { this.cost = cost; }
+    public setCost(cost : number) { 
+        this.cost = cost;
+    }
 
     public getCost() { return this.cost; }
 

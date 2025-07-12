@@ -19,17 +19,25 @@ export class Edge
     }
 
     getCost(): number {
-        if (Number.isFinite(this.cost))
+        if (this.cost !== -1)
         {
             return this.cost;
         }
         else
         {
-            return this.obj.getCost();
+            if (typeof this.obj === 'number') {
+                return this.obj;
+            } else if (this.obj && typeof this.obj.getCost === 'function') {
+                return this.obj.getCost();
+            } else {
+                return 1; // default cost
+            }
         }
     }
 
-    public setCost(cost : number) { this.cost = cost; }
+    public setCost(cost : number) { 
+        this.cost = cost;
+    }
 
     public getPrev() { return this.prev; }
 
