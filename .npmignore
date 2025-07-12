@@ -1,0 +1,47 @@
+# Source files (only ship dist)
+src/
+test/
+*.test.ts
+*.spec.ts
+
+# Development files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Configuration files
+tsconfig.json
+jest.config.js
+babel.config.js
+.gitignore
+
+# Build artifacts
+bin/
+coverage/
+.nyc_output
+
+# Documentation source
+docs/
+
+# Environment files
+.env*
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules (just in case)
+node_modules/
+
+# Git files
+.git/
+.gitignore
+
+# Test artifacts
+test-graph.jpg
