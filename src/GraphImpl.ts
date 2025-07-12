@@ -3,10 +3,9 @@ import { IGraph } from "./IGraph";
 import { Vertex } from './Vertex';
 import { IGraphSearch } from "./IGraphSearch";
 import { Path } from "./Path";
-import { IPathBuilder } from './IPathBuilder';
 import { PriorityQueue } from './PriorityQueue';
 
-export class GraphImpl implements IGraph, IGraphSearch, IPathBuilder
+export class GraphImpl implements IGraph, IGraphSearch
 {
     edges : Edge[];
     vertices : Vertex[];
