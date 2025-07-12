@@ -95,7 +95,7 @@ export class ThreadSafeGraphImpl {
         }
 
         if (dest.prev == undefined) {
-            console.log("No path found to destination");
+            // No path found - return empty path silently
             return path;
         }
 

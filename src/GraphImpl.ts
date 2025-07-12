@@ -80,7 +80,8 @@ export class GraphImpl implements IGraph, IGraphSearch
             output += key.label + "\t\t" + value + "\n";
         });
 
-        console.log(output);
+        // Debug output - uncomment if needed for debugging
+        // console.log(output);
     }
 
     public bmf_negativeCycles() 
@@ -196,7 +197,6 @@ export class GraphImpl implements IGraph, IGraphSearch
 
         if (dest.prev == undefined) 
         {
-            console.log("we did not find a path leading to destination");
             return path;
         } 
 
