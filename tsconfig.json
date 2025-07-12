@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-  
-    
     "target": "es2020",
     "types": ["node", "jest"],
     "allowJs": true,
@@ -16,8 +14,14 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "noFallthroughCasesInSwitch": true,
-    "outDir": "./bin",                                   /* Specify an output folder for all emitted files. */
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "removeComments": false,
+    "preserveConstEnums": true
   },
   "compileOnSave": true,
-  "include": ["."]
+  "include": ["src/**/*"],
+  "exclude": ["test/**/*", "node_modules", "dist", "bin", "coverage"]
 }
