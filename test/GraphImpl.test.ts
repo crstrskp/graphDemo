@@ -324,8 +324,7 @@ describe('IGraph_testSuite', () =>
         var v2 = graph.insertVertex("v2");
         var e1_2 = graph.insertEdge(v1, v2, "e1_2");
 
-        expect(e1_2.obj).toEqual("e1_2");
-
+        expect(e1_2.getAttribute("payload")).toEqual("e1_2");
     });
 
     test('graph_removeVertex', () => {

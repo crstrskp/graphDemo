@@ -4,17 +4,26 @@ import { Vertex } from './Vertex';
 import { IGraphSearch } from "./IGraphSearch";
 import { Path } from "./Path";
 import { PriorityQueue } from './PriorityQueue';
+import { Attributes } from "./types/Attributes";
 
 export class GraphImpl implements IGraph, IGraphSearch
 {
     edges : Edge[];
     vertices : Vertex[];
     private vertexMap : Map<string, Vertex>;
-    
+    attributes  : Attributes;
+        
     constructor() {
         this.edges = [];
         this.vertices = [];
         this.vertexMap = new Map<string, Vertex>();
+        this.attributes = {};
+    }
+
+    private static idCounter = 0; 
+    public static generateId() : number
+    {
+        return this.idCounter++; 
     }
 
     public bellmanFord(src : Vertex) {
@@ -220,9 +229,22 @@ export class GraphImpl implements IGraph, IGraphSearch
         return path;
     }
     
+    public setAttribute(key : string, value : any) { this.attributes[key] = value; }
+    
+    public getAttribute(key : string) { return this.attributes[key]; }
+    
     public getVertexByLabel(label: string) : Vertex | undefined
     {
         return this.vertexMap.get(label);
+    }
+
+    public getVertexById(id: number) : Vertex | undefined
+    {
+        return this.vertices.find(vertex => vertex.getId() === id);
+    }
+
+    getEdgeById(id: number): Edge | undefined {
+        return this.edges.find(edge => edge.getId() === id);
     }
 
     public getAllVertices(): Vertex[] 
@@ -368,11 +390,12 @@ export class GraphImpl implements IGraph, IGraphSearch
     public insertEdge(v: Vertex, w: Vertex, o: any): Edge 
     {
         var e = new Edge(v, w);
+        e.id = GraphImpl.generateId();
         if (Number.isFinite(o))
         {
             e.setCost(o);
         } else {
-            e.obj = o;
+            e.setAttribute("payload", o);
         }
 
         this.edges.push(e);

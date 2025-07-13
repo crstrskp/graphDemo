@@ -1,34 +1,34 @@
 import { Vertex } from "./Vertex";
+import { Attributes } from "./types/Attributes";
 
 export class Edge
 {
     start : Vertex; 
     end : Vertex; 
-    obj : any;
-
+    id : number;
     cost : number; 
     prev : Vertex | undefined;
+    attributes : Attributes;
     /**
      *
      */
     constructor(start : Vertex, end : Vertex) {
         this.start = start; 
         this.end = end; 
-
         this.cost = -1;
+        this.attributes = {};
+        this.id = 0; // Will be set by GraphImpl.generateId()
     }
 
     getCost(): number {
-        if (this.cost !== -1)
-        {
+        if (this.cost !== -1) {
             return this.cost;
-        }
-        else
-        {
-            if (typeof this.obj === 'number') {
-                return this.obj;
-            } else if (this.obj && typeof this.obj.getCost === 'function') {
-                return this.obj.getCost();
+        } else {
+            const payload = this.getAttribute("payload");
+            if (typeof payload === 'number') {
+                return payload;
+            } else if (payload && typeof payload.getCost === 'function') {
+                return payload.getCost();
             } else {
                 return 1; // default cost
             }
@@ -43,8 +43,11 @@ export class Edge
 
     public setPrev(p : Vertex) { this.prev = p; }
 
-    public getObj() : any { return this.obj; }
 
-    public setObj(obj : any) { this.obj = obj; }
+    public getId() : number { return this.id; }
+    
+    public setAttribute(key : string, value : any) { this.attributes[key] = value; }
+    
+    public getAttribute(key : string) { return this.attributes[key]; }
 
 }

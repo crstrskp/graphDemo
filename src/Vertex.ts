@@ -1,26 +1,39 @@
 import { Edge } from "./Edge";
+import { GraphImpl } from "./GraphImpl";
 import { IVertex } from "./IVertex";
+import { Attributes } from "./types/Attributes";
 
 export class Vertex implements IVertex
 {
-    label : string; 
-    visited : boolean;  // used for iterating via search algorithms
-    cost : number;      
-    object : any; 
-    prev : Edge | undefined;
+    label       : string; 
+    id          : number; 
+    visited     : boolean;  // used for iterating via search algorithms
+    cost        : number;      
+    attributes  : Attributes;
+    prev        : Edge | undefined;
     
 
     public setLabel(s : string) { this.label = s; }
     public getLabel() { return this.label; }
 
-    constructor(label : string) {
-        this.label = label; 
+    constructor(payload : any) {
+        this.id = GraphImpl.generateId();
+        this.attributes = {};
+
+        if (typeof payload === 'string') {
+            this.label = payload;
+        }
+        else {
+            this.setAttribute("payload", payload);
+            this.label = "Vertex " + this.id;
+        }
+
         this.visited = false; 
         this.cost = 0;
     }
 
     public updateCost() {
-  
+        // Future implementation for dynamic cost updates
     }
 
     public setCost(cost : number) { 
@@ -28,11 +41,14 @@ export class Vertex implements IVertex
     }
 
     public getCost() { return this.cost; }
-
-    public getObject() { return this.object; }
     
     public getPrev() { return this.prev; }
 
     public setPrev(e : Edge) { this.prev = e; }
 
+    public getId() { return this.id; }
+    
+    public setAttribute(key : string, value : any) { this.attributes[key] = value; }
+    
+    public getAttribute(key : string) { return this.attributes[key]; }
 }
