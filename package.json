@@ -1,13 +1,24 @@
 {
   "name": "@crstrskp/graph",
   "author": "Jesper Tjørnelund",
-  "version": "0.2.00",
-  "main": "./src/Graph",
-  "types": "./src/Graph.d.ts",
-  "files:": [
-    "src"
+  "version": "1.0.0",
+  "description": "High-performance TypeScript graph algorithms library optimized for trading bots and arbitrage detection",
+  "main": "./dist/Graph.js",
+  "types": "./dist/Graph.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
-  "dependencies": {
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
     "@babel/preset-env": "^7.18.9",
     "@babel/preset-typescript": "^7.18.6",
     "@types/jest": "^29.5.3",
@@ -16,29 +27,31 @@
     "ts-jest": "^29.1.1",
     "typescript": "^5.0.4"
   },
-  "scripts": {
-    "prepublish": "tsc",
-    "test": "jest"
-  },
-  "bin": {
-    "graph": "bin/babel.config.js"
-  },
   "directories": {
     "test": "test"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/crstrskp/graphDemo.git"
   },
   "keywords": [
     "graph",
-    "typescript"
+    "algorithms", 
+    "typescript",
+    "trading",
+    "arbitrage",
+    "dijkstra",
+    "bellman-ford",
+    "financial",
+    "real-time",
+    "performance"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/crstrskp/graphDemo/issues"
   },
   "homepage": "https://github.com/crstrskp/graphDemo#readme",
-  "description": ""
+  "engines": {
+    "node": ">=14.0.0"
+  }
 }
