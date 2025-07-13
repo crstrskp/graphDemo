@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2025-07-13
+
+### 🔧 **Critical Bug Fixes & Merge Resolution**
+
+#### Interface Compliance
+- **Fixed TypeScript interface violations** after merge conflicts
+  - Added missing `attributes`, `getId`, `setAttribute`, `getAttribute` methods
+  - Restored `generateId` method that was lost during merge
+  - Fixed Edge and Vertex classes to properly implement IGraph/IVertex interfaces
+
+#### Legacy Code Cleanup  
+- **Eliminated deprecated `.obj` references**
+  - Removed all `.obj` properties and methods from Edge class
+  - Updated `insertEdgeWithObjects` test to use modern attributes system
+  - Clean separation between cost (numbers) and payload (attributes)
+
+#### Append Method Fix
+- **Fixed subgraph append functionality** (`GraphImpl.ts:489`)
+  - Added missing `vertexMap.set(v.label, v)` for proper vertex label lookup
+  - Resolves issue where `getVertexByLabel()` returned undefined after append operations
+  - Critical for multi-exchange trading bot integrations
+
+#### Build & Test Stability
+- **Resolved merge conflicts** between main and dev branches
+  - Prioritized optimized dev branch changes while preserving valuable main features
+  - Maintained all v1.0 production optimizations and comprehensive test suite
+  - Fixed TypeScript compilation errors and interface compliance
+
+### ✅ **Production Ready**
+- All 67 tests now passing with proper interface compliance
+- Build system fully functional with TypeScript declarations
+- Ready for npm publish with clean codebase
+
+### 🎯 **Impact**
+- **Trading Bots**: Subgraph append operations now work correctly for multi-exchange setups
+- **Type Safety**: Full TypeScript compliance restored for production use
+- **Code Quality**: Eliminated legacy patterns in favor of modern attributes system
+
+---
+
 ## [1.0.0] - 2025-07-10
 
 ### 🎉 **First Stable Release - Production Ready**
