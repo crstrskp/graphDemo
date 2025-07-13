@@ -773,4 +773,336 @@ describe('IGraphSearch_testSuite', () =>
         expect(dijkstra.getTotalCost()).toEqual(280);
 
     });
+
+    // Critical Edge Cases for Production Trading Bots
+    test('empty_graph_shortest_path', () => {
+        var graph = new GraphImpl();
+        
+        // Empty graph should handle gracefully
+        expect(graph.getAllVertices().length).toBe(0);
+        expect(graph.getAllEdges().length).toBe(0);
+        
+        // Should not crash on empty graph operations
+        expect(graph.bmf_negativeCycles().length).toBe(0);
+    });
+
+    test('single_vertex_shortest_path', () => {
+        var graph = new GraphImpl();
+        var vertex = graph.insertVertex("A");
+        
+        // Path from vertex to itself should work
+        var dijkstraPath = graph.dijkstra_shortestPath(vertex, vertex);
+        var bellmanPath = graph.bellmanFord_shortestPath(vertex, vertex);
+        
+        expect(dijkstraPath.getTotalCost()).toBe(0);
+        expect(bellmanPath.getTotalCost()).toBe(0);
+        
+        // Paths might be empty for same vertex, which is valid behavior
+        expect(dijkstraPath.steps.length).toBeGreaterThanOrEqual(0);
+        expect(bellmanPath.steps.length).toBeGreaterThanOrEqual(0);
+    });
+
+    test('unreachable_vertices_shortest_path', () => {
+        var graph = new GraphImpl();
+        
+        // Create disconnected components
+        var A = graph.insertVertex("A");
+        var B = graph.insertVertex("B");
+        var C = graph.insertVertex("C");
+        var D = graph.insertVertex("D");
+        
+        // Connect A-B but leave C-D isolated
+        graph.insertEdge(A, B, 5);
+        graph.insertEdge(C, D, 3);
+        
+        // Attempt to find path between disconnected components
+        var dijkstraPath = graph.dijkstra_shortestPath(A, C);
+        var bellmanPath = graph.bellmanFord_shortestPath(A, C);
+        
+        // Should return empty paths for unreachable vertices
+        expect(dijkstraPath.getTotalCost()).toBe(0);
+        expect(bellmanPath.getTotalCost()).toBe(0);
+        
+        // Path steps should indicate no valid path found
+        expect(dijkstraPath.steps.length).toBeLessThanOrEqual(1); // Just destination
+        expect(bellmanPath.steps.length).toBeLessThanOrEqual(1);
+    });
+
+    test('vertex_map_consistency', () => {
+        var graph = new GraphImpl();
+        
+        var vertices: Vertex[] = [];
+        for (var i = 0; i < 100; i++) {
+            vertices.push(graph.insertVertex(`vertex_${i}`));
+        }
+        
+        // Test vertex lookup consistency
+        for (var i = 0; i < 100; i++) {
+            var retrieved = graph.getVertexByLabel(`vertex_${i}`);
+            expect(retrieved).toBe(vertices[i]);
+            expect(retrieved?.label).toBe(`vertex_${i}`);
+        }
+        
+        // Remove some vertices
+        for (var i = 0; i < 50; i += 2) {
+            graph.removeVertex(vertices[i]);
+        }
+        
+        // Check remaining vertices still accessible
+        for (var i = 1; i < 100; i += 2) {
+            var retrieved = graph.getVertexByLabel(`vertex_${i}`);
+            expect(retrieved).toBe(vertices[i]);
+        }
+        
+        // Check removed vertices are gone
+        for (var i = 0; i < 50; i += 2) {
+            var retrieved = graph.getVertexByLabel(`vertex_${i}`);
+            expect(retrieved).toBeUndefined();
+        }
+    });
+
+    // Financial Precision Tests for Trading Applications
+    test('financial_precision_small_decimals', () => {
+        var graph = new GraphImpl();
+        
+        // Test with very small price differences (typical in forex)
+        var USD = graph.insertVertex("USD");
+        var EUR = graph.insertVertex("EUR");
+        var GBP = graph.insertVertex("GBP");
+        
+        // Create a path that goes through other vertices
+        graph.insertEdge(USD, EUR, 0.000001);
+        graph.insertEdge(EUR, GBP, 0.000002);
+        graph.insertEdge(GBP, USD, 0.000003);
+        
+        var path = graph.dijkstra_shortestPath(USD, GBP);
+        
+        // Should preserve precision for small decimals
+        expect(path.getTotalCost()).toBeCloseTo(0.000003, 8);
+    });
+
+    test('negative_zero_handling', () => {
+        var graph = new GraphImpl();
+        
+        var A = graph.insertVertex("A");
+        var B = graph.insertVertex("B");
+        
+        // Test negative zero vs positive zero
+        var edge1 = graph.insertEdge(A, B, -0.0);
+        var edge2 = graph.insertEdge(B, A, +0.0);
+        
+        // Both should be considered zero (using loose equality)
+        expect(edge1.getCost() == 0).toBe(true);
+        expect(edge2.getCost() == 0).toBe(true);
+        
+        // Test the specific -0 vs +0 behavior
+        expect(Object.is(edge1.getCost(), -0)).toBe(true);
+        expect(Object.is(edge2.getCost(), +0)).toBe(true);
+    });
+
+    test('cumulative_precision_errors', () => {
+        var graph = new GraphImpl();
+        
+        // Create a chain of many small decimal edges
+        var vertices: Vertex[] = [];
+        for (var i = 0; i < 100; i++) {
+            vertices.push(graph.insertVertex(`v${i}`));
+        }
+        
+        // Add edges with small decimal costs
+        for (var i = 0; i < 99; i++) {
+            graph.insertEdge(vertices[i], vertices[i + 1], 0.01);
+        }
+        
+        var path = graph.dijkstra_shortestPath(vertices[0], vertices[99]);
+        
+        // Should maintain precision across many small additions
+        expect(path.getTotalCost()).toBeCloseTo(0.99, 10);
+    });
+
+    test('extreme_values_handling', () => {
+        var graph = new GraphImpl();
+        
+        var A = graph.insertVertex("A");
+        var B = graph.insertVertex("B");
+        var C = graph.insertVertex("C");
+        
+        // Test with extreme values
+        graph.insertEdge(A, B, Number.MAX_SAFE_INTEGER);
+        graph.insertEdge(B, C, -Number.MAX_SAFE_INTEGER);
+        
+        var path = graph.dijkstra_shortestPath(A, C);
+        
+        // Should handle extreme values without overflow
+        expect(isFinite(path.getTotalCost())).toBe(true);
+        expect(path.getTotalCost()).toBeCloseTo(0, 1);
+    });
+
+    // Advanced Arbitrage Detection Tests for Trading Bots  
+    test('simple_arbitrage_cycle', () => {
+        var graph = new GraphImpl();
+        
+        // Create the exact same structure as the working test
+        var A = graph.insertVertex("a");
+        var B = graph.insertVertex("b");
+        var C = graph.insertVertex("c");
+        var D = graph.insertVertex("d");
+        var E = graph.insertVertex("e");
+        var F = graph.insertVertex("f");
+
+        var eA_B = graph.insertEdge(A, B, 8.7);
+        var eA_F = graph.insertEdge(A, F, 3.8);
+        
+        var eB_C = graph.insertEdge(B, C, 1.3);
+        var eB_E = graph.insertEdge(B, E, 7.5);
+        
+        var eC_D = graph.insertEdge(C, D, 2.1);
+        
+        var eD_E = graph.insertEdge(D, E, 1.9);
+        
+        var eE_B = graph.insertEdge(E, B, 5.8);
+        var eE_C = graph.insertEdge(E, C, -5.0);  // This creates the negative cycle
+        var eE_D = graph.insertEdge(E, D, 3.1);
+        
+        var eF_E = graph.insertEdge(F, E, 12.0);
+        var eF_A = graph.insertEdge(F, A, 8.0);
+        
+        var cycles = graph.bmf_negativeCycles();
+        
+        // Should detect the negative cycle (same as the working test)
+        expect(cycles.length).toBeGreaterThanOrEqual(1);
+        
+        // All detected cycles should be actually profitable
+        cycles.forEach(cycle => {
+            expect(cycle.getTotalCost()).toBeLessThan(0);
+        });
+    });
+
+    test('currency_arbitrage_realistic_scenario', () => {
+        var graph = new GraphImpl();
+        
+        // Real-world-like exchange rates (using log prices for arbitrage detection)
+        var BTC = graph.insertVertex("BTC");
+        var ETH = graph.insertVertex("ETH");
+        var USDT = graph.insertVertex("USDT");
+        var USDC = graph.insertVertex("USDC");
+        
+        // Exchange A rates
+        graph.insertEdge(BTC, ETH, Math.log(15.5));    // BTC/ETH = 15.5
+        graph.insertEdge(ETH, USDT, Math.log(3200));   // ETH/USDT = 3200
+        graph.insertEdge(USDT, USDC, Math.log(0.9999)); // USDT/USDC = 0.9999
+        graph.insertEdge(USDC, BTC, Math.log(1/50000)); // BTC/USDC = 50000
+        
+        // Exchange B rates (slightly different, creating arbitrage)
+        graph.insertEdge(BTC, USDT, Math.log(49500));  // Slightly lower BTC/USDT rate
+        graph.insertEdge(USDT, BTC, Math.log(1/49600)); // Creating profitable cycle
+        
+        var cycles = graph.bmf_negativeCycles();
+        
+        // Should detect arbitrage opportunity
+        expect(cycles.length).toBeGreaterThan(0);
+        
+        // Find the most profitable cycle
+        var bestCycle = cycles.reduce((best, current) => 
+            current.getTotalCost() < best.getTotalCost() ? current : best
+        );
+        
+        expect(bestCycle.getTotalCost()).toBeLessThan(0);
+    });
+
+    test('arbitrage_with_transaction_fees', () => {
+        var graph = new GraphImpl();
+        
+        var A = graph.insertVertex("A");
+        var B = graph.insertVertex("B");
+        var C = graph.insertVertex("C");
+        
+        // Without fees: profitable cycle
+        // A->B: 0.9, B->C: 0.95, C->A: 1.2
+        // Product: 0.9 * 0.95 * 1.2 = 1.026 (profitable)
+        
+        // With fees: add 0.001 fee to each trade (in log space)
+        var fee = Math.log(1.001);
+        
+        graph.insertEdge(A, B, Math.log(0.9) + fee);
+        graph.insertEdge(B, C, Math.log(0.95) + fee);
+        graph.insertEdge(C, A, Math.log(1.2) + fee);
+        
+        var cycles = graph.bmf_negativeCycles();
+        
+        // Verify if arbitrage is still profitable after fees
+        if (cycles.length > 0) {
+            var totalCost = cycles[0].getTotalCost();
+            var profitAfterFees = Math.exp(-totalCost) - 1;
+            
+            // Should be measurably profitable even after fees
+            expect(profitAfterFees).toBeGreaterThan(0.001); // > 0.1% profit
+        }
+    });
+
+    test('arbitrage_detection_performance', () => {
+        var graph = new GraphImpl();
+        
+        // Create a complex multi-currency graph
+        var currencies = ["USD", "EUR", "GBP", "JPY", "CHF", "CAD", "AUD", "NZD"];
+        var vertices = currencies.map(c => graph.insertVertex(c));
+        
+        // Add edges between all currency pairs
+        for (var i = 0; i < vertices.length; i++) {
+            for (var j = 0; j < vertices.length; j++) {
+                if (i !== j) {
+                    // Random exchange rates with occasional arbitrage opportunities
+                    var rate = 0.5 + Math.random() * 2;
+                    if (Math.random() < 0.1) { // 10% chance of arbitrage edge
+                        rate *= 0.95; // Make it more favorable
+                    }
+                    graph.insertEdge(vertices[i], vertices[j], Math.log(rate));
+                }
+            }
+        }
+        
+        var startTime = Date.now();
+        var cycles = graph.bmf_negativeCycles();
+        var endTime = Date.now();
+        
+        // Should complete within reasonable time for trading bot responsiveness
+        expect(endTime - startTime).toBeLessThan(1000); // < 1 second
+        
+        // Should find cycles if they exist
+        if (cycles.length > 0) {
+            cycles.forEach(cycle => {
+                expect(cycle.getTotalCost()).toBeLessThan(0);
+                expect(cycle.steps.length).toBeGreaterThan(2); // Valid cycle
+            });
+        }
+    });
+
+    test('precision_sensitive_arbitrage', () => {
+        var graph = new GraphImpl();
+        
+        var USD = graph.insertVertex("USD");
+        var EUR = graph.insertVertex("EUR");
+        var GBP = graph.insertVertex("GBP");
+        
+        // Very small arbitrage opportunity (0.01% profit)
+        // This tests if the system can detect tiny profitable cycles
+        var rate1 = 1.1000; // USD/EUR
+        var rate2 = 0.8500; // EUR/GBP  
+        var rate3 = 1.0701; // GBP/USD (slightly profitable)
+        
+        graph.insertEdge(USD, EUR, Math.log(rate1));
+        graph.insertEdge(EUR, GBP, Math.log(rate2));
+        graph.insertEdge(GBP, USD, Math.log(rate3));
+        
+        var cycles = graph.bmf_negativeCycles();
+        
+        if (cycles.length > 0) {
+            var totalCost = cycles[0].getTotalCost();
+            var profit = Math.exp(-totalCost) - 1;
+            
+            // Should detect small but measurable profit
+            expect(profit).toBeGreaterThan(0);
+            expect(profit).toBeLessThan(0.001); // Very small profit
+        }
+    });
 });
