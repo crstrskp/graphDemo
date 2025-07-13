@@ -143,7 +143,7 @@ export class ThreadSafeGraphImpl {
         if (typeof o === 'number') {
             e.setCost(o);
         } else {
-            e.obj = o;
+            e.setAttribute("payload", o);
         }
 
         this.edges.push(e);

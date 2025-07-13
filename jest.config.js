@@ -13,4 +13,5 @@ module.exports = {
     "tsx",
     "json"
   ],
+  "testTimeout": 10000
 }

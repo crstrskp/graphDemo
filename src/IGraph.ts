@@ -1,11 +1,12 @@
 import { Edge } from "./Edge";
+import { Attributes } from "./types/Attributes";
 import { Vertex } from "./Vertex";
 
 export interface IGraph
 {
     edges : Edge[];
     vertices : Vertex[];
-
+    attributes : Attributes;
     /**
      * return an array of all the vertices of the graph.
      * @Input: None; @Output: array of vertices
@@ -93,5 +94,38 @@ export interface IGraph
      * @param e The edge that are to be removed. 
      */
     removeEdge(e : Edge) : any
+
+    /**
+     * Sorts the edges in ascending order. 
+     * @param edges list of edges to be sorted 
+     * @returns a new list of sorted edges
+     */
+    sortEdgesASC(edges : Edge[]) : Edge[];
+
+    /**
+     * Sorts the edges in descending order. 
+     * @param edges list of edges to be sorted 
+     * @returns a new list of sorted edges
+     */
+    sortEdgesDESC(edges : Edge[]) : Edge[];
+
+    /**
+     * Return the vertex with the given label. 
+     * @param label The label of the vertex. 
+     */
+    getVertexByLabel(label : string) : Vertex | undefined;
+
+    /**
+     * Return the vertex with the given id. 
+     * @param id The id of the vertex. 
+     */
+    getVertexById(id : number) : Vertex | undefined;
+    
+    /**
+     * Return the edge with the given id. 
+     * @param id The id of the edge. 
+     */
+    getEdgeById(id : number) : Edge | undefined;
+    
 }
 

@@ -25,7 +25,8 @@
     "babel-jest": "^29.6.2",
     "jest": "^29.6.2",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "user": "^0.0.0"
   },
   "directories": {
     "test": "test"
