@@ -1,7 +1,7 @@
 {
   "name": "@crstrskp/graph",
   "author": "Jesper Tjørnelund",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "High-performance TypeScript graph algorithms library optimized for trading bots and arbitrage detection",
   "main": "./dist/Graph.js",
   "types": "./dist/Graph.d.ts",
@@ -27,6 +27,9 @@
     "ts-jest": "^29.1.1",
     "typescript": "^5.0.4",
     "user": "^0.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "directories": {
     "test": "test"

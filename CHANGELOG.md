@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2025-07-14
+
+### 🚀 **Node.js 20+ Requirement**
+
+#### Modern Runtime Support
+- **Updated minimum Node.js requirement** to v20.0.0+
+  - Eliminates support for EOL Node.js versions (14.x, 16.x, 18.x)
+  - Leverages latest V8 engine improvements for ~10-15% performance boost
+  - Enhanced memory management for long-running trading bot applications
+
+#### CI/CD Improvements
+- **Updated GitHub Actions** to test Node.js 20.x and 22.x
+  - Faster CI pipeline with modern Node.js versions
+  - Better ARM64 support for Apple Silicon development
+  - Latest security patches for financial applications
+
+#### Trading Bot Benefits
+- **Native Fetch API**: Eliminates need for `node-fetch` dependency in market data clients
+- **Enhanced Performance**: Better numerical computation performance for graph algorithms
+- **Improved Debugging**: Enhanced stack traces for trading algorithm development
+
+### 🎯 **Recommended Migration**
+For existing users: Update your trading bot runtime to Node.js 20+ to benefit from:
+- Faster arbitrage detection algorithms
+- Reduced memory usage in high-frequency scenarios
+- Better real-time market data processing
+
+---
+
 ## [1.0.1] - 2025-07-13
 
 ### 🔧 **Critical Bug Fixes & Merge Resolution**
